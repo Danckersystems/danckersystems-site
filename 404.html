@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self': formularen må kun sendes til vores egen server (send.php).
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
@@ -16,7 +16,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/apple-touch-icon-180.png">
   <link rel="preload" href="/fonts/SchibstedGrotesk-800.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css?v=202610240932">
 </head>
 <body>
   <a class="skip" href="#indhold">Spring til indhold</a>
@@ -102,6 +102,6 @@
   <script src="/js/vendor/ScrollTrigger.min.js" defer></script>
   <script src="/js/vendor/SplitText.min.js" defer></script>
   <script src="/js/vendor/lenis.min.js" defer></script>
-  <script src="/js/main.js" defer></script>
+  <script src="/js/main.js?v=202610240932" defer></script>
 </body>
 </html>
