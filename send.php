@@ -1,10 +1,12 @@
 <?php
 // Dancker Systems – modtager kontaktformularen og sender den som mail til kontakt@.
 // Intet gemmes: beskeden sendes kun videre som mail og glemmes derefter.
-// Kører på Simplys webhotel (PHP + mail()).
+//
+// Mailen sendes ved at logge ind på Simplys mailserver (SMTP) som kontakt@, ligesom et
+// mailprogram gør. Det er nødvendigt, fordi domænets DMARC-regel ellers afviser mailen.
+// Login står i filen mail-config.php, som ligger UDEN FOR public_html og aldrig i git.
 
 const MODTAGER = 'kontakt@danckersystems.dk';
-const AFSENDER = 'kontakt@danckersystems.dk'; // Skal være en adresse på eget domæne, ellers afvises mailen ofte som spam
 
 // Kun POST (altså når formularen sendes). Alt andet sendes tilbage til kontaktsiden.
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -20,6 +22,11 @@ function felt(string $navn): string {
 // Fjern linjeskift, så ingen kan sætte ekstra mail-headers ind via et felt
 function enLinje(string $tekst): string {
     return str_replace(["\r", "\n"], ' ', $tekst);
+}
+
+// Kod en header-tekst med æ, ø, å korrekt (fx emnet og navnet)
+function kodHeader(string $tekst): string {
+    return '=?UTF-8?B?' . base64_encode($tekst) . '?=';
 }
 
 // ---------- Spambeskyttelse ----------
@@ -53,7 +60,7 @@ if ($fejl) {
     exit;
 }
 
-// ---------- Byg og send mailen ----------
+// ---------- Byg mailen ----------
 $emne = 'Forespørgsel: ' . $opgave . ' – ' . $navn;
 $tekst = "Ny forespørgsel fra danckersystems.dk\n\n"
        . "Navn: $navn\n"
@@ -62,16 +69,79 @@ $tekst = "Ny forespørgsel fra danckersystems.dk\n\n"
        . "Opgave: $opgave\n\n"
        . $besked . "\n";
 
-$headers = implode("\r\n", [
-    'From: Dancker Systems <' . AFSENDER . '>',
-    'Reply-To: ' . $mail,               // Tryk "Svar" i mailen, så svarer du direkte til kunden
-    'Content-Type: text/plain; charset=UTF-8',
-    'Content-Transfer-Encoding: 8bit',
-    'MIME-Version: 1.0',
-]);
+// ---------- Send via SMTP ----------
+// mail-config.php ligger én mappe over public_html og ser sådan ud:
+//   <?php return ['vaert' => 'smtp.simply.com', 'port' => 587,
+//                 'bruger' => 'kontakt@danckersystems.dk', 'kode' => 'DIN-KODE'];
+$configFil = dirname(__DIR__) . '/mail-config.php';
+if (!is_file($configFil)) {
+    error_log('send.php: mail-config.php mangler');
+    header('Location: /kontakt.html?fejl=2#kontaktformular', true, 303);
+    exit;
+}
+$cfg = require $configFil;
 
-$emneKodet = '=?UTF-8?B?' . base64_encode($emne) . '?=';
-$sendt = mail(MODTAGER, $emneKodet, $tekst, $headers, '-f' . AFSENDER);
+$sendt = smtpSend($cfg, MODTAGER, $mail, $emne, $tekst);
 
 header('Location: ' . ($sendt ? '/tak.html' : '/kontakt.html?fejl=2#kontaktformular'), true, 303);
 exit;
+
+
+// =====================================================================
+// En lille SMTP-klient: forbinder, skifter til kryptering (STARTTLS),
+// logger ind og afleverer mailen. Returnerer true, hvis serveren tog imod den.
+// Ved fejl skrives kun SMTP-svaret i serverens fejllog (ingen persondata).
+// =====================================================================
+function smtpSend(array $cfg, string $til, string $svarTil, string $emne, string $tekst): bool {
+    $fra  = $cfg['bruger'];
+    $fp = @stream_socket_client('tcp://' . $cfg['vaert'] . ':' . (int)$cfg['port'], $nr, $fejltekst, 15);
+    if (!$fp) { error_log("send.php: kan ikke forbinde: $fejltekst"); return false; }
+    stream_set_timeout($fp, 15);
+
+    // Læs et (evt. flerlinjet) svar og tjek, at koden er den forventede
+    $svar = function (string $forventet) use ($fp): bool {
+        $linje = '';
+        while (($l = fgets($fp, 515)) !== false) {
+            $linje = $l;
+            if (isset($l[3]) && $l[3] === ' ') break;   // sidste linje i svaret
+        }
+        if (strpos($linje, $forventet) !== 0) { error_log('send.php: SMTP-svar: ' . trim($linje)); return false; }
+        return true;
+    };
+    $skriv = function (string $kommando) use ($fp): void { fwrite($fp, $kommando . "\r\n"); };
+
+    $ok = $svar('220')
+       && ($skriv('EHLO danckersystems.dk') || true) && $svar('250')
+       && ($skriv('STARTTLS') || true) && $svar('220')
+       && stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)
+       && ($skriv('EHLO danckersystems.dk') || true) && $svar('250')
+       && ($skriv('AUTH LOGIN') || true) && $svar('334')
+       && ($skriv(base64_encode($cfg['bruger'])) || true) && $svar('334')
+       && ($skriv(base64_encode($cfg['kode'])) || true) && $svar('235')
+       && ($skriv("MAIL FROM:<$fra>") || true) && $svar('250')
+       && ($skriv("RCPT TO:<$til>") || true) && $svar('250')
+       && ($skriv('DATA') || true) && $svar('354');
+
+    if ($ok) {
+        $headers = [
+            'Date: ' . date('r'),
+            'From: ' . kodHeader('Dancker Systems – formular') . " <$fra>",
+            "To: <$til>",
+            "Reply-To: <$svarTil>",                 // Tryk "Svar", så svarer du direkte til kunden
+            'Subject: ' . kodHeader($emne),
+            'Message-ID: <' . bin2hex(random_bytes(12)) . '@danckersystems.dk>',
+            'MIME-Version: 1.0',
+            'Content-Type: text/plain; charset=UTF-8',
+            'Content-Transfer-Encoding: 8bit',
+        ];
+        // Linjer, der starter med et punktum, skal have et ekstra punktum (SMTP-regel)
+        $krop = preg_replace('/^\./m', '..', str_replace(["\r\n", "\r"], "\n", $tekst));
+        $krop = str_replace("\n", "\r\n", $krop);
+        fwrite($fp, implode("\r\n", $headers) . "\r\n\r\n" . $krop . "\r\n.\r\n");
+        $ok = $svar('250');
+    }
+
+    $skriv('QUIT');
+    fclose($fp);
+    return $ok;
+}
