@@ -63,3 +63,8 @@ ErrorDocument 404 /404.html
 # Sørg for, at nyere filtyper får den rigtige type
 AddType image/webp .webp
 AddType font/woff2 .woff2
+
+# ---------- Login til mailserveren må aldrig kunne hentes ----------
+<Files "mail-config.php">
+  Require all denied
+</Files>

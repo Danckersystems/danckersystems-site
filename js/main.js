@@ -178,8 +178,11 @@ if (formular) {
   const fejl = new URLSearchParams(location.search).get("fejl");
   const boks = document.getElementById("formular-fejl");
   if (fejl && boks) {
+    // "trin" fortæller, hvor afsendelsen stoppede (fx config, forbind, login). Hjælper med fejlfinding.
+    const trin = new URLSearchParams(location.search).get("trin");
     boks.textContent = fejl === "2"
-      ? "Beskeden kunne ikke sendes lige nu. Prøv igen, eller skriv direkte til kontakt@danckersystems.dk."
+      ? "Beskeden kunne ikke sendes lige nu. Prøv igen, eller skriv direkte til kontakt@danckersystems.dk." +
+        (trin ? ` (Fejlkode: ${trin})` : "")
       : "Tjek venligst felterne: navn, en gyldig e-mail og en kort besked skal udfyldes.";
     boks.hidden = false;
   }

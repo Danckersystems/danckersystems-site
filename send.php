@@ -4,7 +4,7 @@
 //
 // Mailen sendes ved at logge ind på Simplys mailserver (SMTP) som kontakt@, ligesom et
 // mailprogram gør. Det er nødvendigt, fordi domænets DMARC-regel ellers afviser mailen.
-// Login står i filen mail-config.php, som ligger UDEN FOR public_html og aldrig i git.
+// Login står i mail-config.php, som aldrig ligger i git (se UDGIV.md).
 
 const MODTAGER = 'kontakt@danckersystems.dk';
 
@@ -24,9 +24,16 @@ function enLinje(string $tekst): string {
     return str_replace(["\r", "\n"], ' ', $tekst);
 }
 
-// Kod en header-tekst med æ, ø, å korrekt (fx emnet og navnet)
+// Kod en header-tekst med æ, ø, å korrekt (fx emnet)
 function kodHeader(string $tekst): string {
     return '=?UTF-8?B?' . base64_encode($tekst) . '?=';
+}
+
+// Send tilbage til formularen med fejlkode 2 og hvilket trin, der fejlede (ingen persondata)
+function fejl(string $trin): void {
+    error_log('send.php: fejl i trin ' . $trin);
+    header('Location: /kontakt.html?fejl=2&trin=' . rawurlencode($trin) . '#kontaktformular', true, 303);
+    exit;
 }
 
 // ---------- Spambeskyttelse ----------
@@ -49,13 +56,13 @@ $besked  = felt('besked');
 
 $tilladteOpgaver = ['Ny hjemmeside', 'Forbedring af en eksisterende side', 'Et lille system', 'Andet'];
 
-$fejl = $navn === '' || mb_strlen($navn) > 100
-     || !filter_var($mail, FILTER_VALIDATE_EMAIL) || mb_strlen($mail) > 150
-     || mb_strlen($firma) > 150
-     || !in_array($opgave, $tilladteOpgaver, true)
-     || $besked === '' || mb_strlen($besked) > 5000;
+$ugyldig = $navn === '' || mb_strlen($navn) > 100
+        || !filter_var($mail, FILTER_VALIDATE_EMAIL) || mb_strlen($mail) > 150
+        || mb_strlen($firma) > 150
+        || !in_array($opgave, $tilladteOpgaver, true)
+        || $besked === '' || mb_strlen($besked) > 5000;
 
-if ($fejl) {
+if ($ugyldig) {
     header('Location: /kontakt.html?fejl=1#kontaktformular', true, 303);
     exit;
 }
@@ -69,33 +76,50 @@ $tekst = "Ny forespørgsel fra danckersystems.dk\n\n"
        . "Opgave: $opgave\n\n"
        . $besked . "\n";
 
-// ---------- Send via SMTP ----------
-// mail-config.php ligger én mappe over public_html og ser sådan ud:
-//   <?php return ['vaert' => 'smtp.simply.com', 'port' => 587,
-//                 'bruger' => 'kontakt@danckersystems.dk', 'kode' => 'DIN-KODE'];
-$configFil = dirname(__DIR__) . '/mail-config.php';
-if (!is_file($configFil)) {
-    error_log('send.php: mail-config.php mangler');
-    header('Location: /kontakt.html?fejl=2#kontaktformular', true, 303);
+// ---------- Find login (mail-config.php) ----------
+// Filen kan ligge ét af to steder (det første, der findes, bruges):
+//   1) én mappe over public_html (bedst: kan slet ikke nås fra nettet)
+//   2) i public_html (beskyttet af .htaccess, og en PHP-fil viser alligevel intet, hvis den åbnes)
+$cfg = null;
+foreach ([dirname(__DIR__) . '/mail-config.php', __DIR__ . '/mail-config.php'] as $fil) {
+    if (@is_file($fil)) {
+        $cfg = require $fil;
+        break;
+    }
+}
+if (!is_array($cfg) || empty($cfg['bruger']) || empty($cfg['kode'])) {
+    fejl('config');
+}
+
+// ---------- Send ----------
+// Prøv først porten fra filen (typisk 587 med STARTTLS). Kan den ikke forbinde, prøves 465 med SSL.
+$resultat = smtpSend($cfg, MODTAGER, $mail, $emne, $tekst, (int)($cfg['port'] ?? 587));
+if ($resultat === 'forbind') {
+    $resultat = smtpSend($cfg, MODTAGER, $mail, $emne, $tekst, 465);
+}
+
+if ($resultat === 'ok') {
+    header('Location: /tak.html', true, 303);
     exit;
 }
-$cfg = require $configFil;
-
-$sendt = smtpSend($cfg, MODTAGER, $mail, $emne, $tekst);
-
-header('Location: ' . ($sendt ? '/tak.html' : '/kontakt.html?fejl=2#kontaktformular'), true, 303);
-exit;
+fejl($resultat);
 
 
 // =====================================================================
-// En lille SMTP-klient: forbinder, skifter til kryptering (STARTTLS),
-// logger ind og afleverer mailen. Returnerer true, hvis serveren tog imod den.
-// Ved fejl skrives kun SMTP-svaret i serverens fejllog (ingen persondata).
+// En lille SMTP-klient. Port 465 bruger SSL fra start; andre porte skifter
+// til kryptering med STARTTLS. Returnerer "ok" eller navnet på det trin,
+// der fejlede: forbind, hilsen, starttls, tls, login, afsender, modtager, data, afvist.
 // =====================================================================
-function smtpSend(array $cfg, string $til, string $svarTil, string $emne, string $tekst): bool {
-    $fra  = $cfg['bruger'];
-    $fp = @stream_socket_client('tcp://' . $cfg['vaert'] . ':' . (int)$cfg['port'], $nr, $fejltekst, 15);
-    if (!$fp) { error_log("send.php: kan ikke forbinde: $fejltekst"); return false; }
+function smtpSend(array $cfg, string $til, string $svarTil, string $emne, string $tekst, int $port): string {
+    $fra   = $cfg['bruger'];
+    $vaert = $cfg['vaert'] ?? 'smtp.simply.com';
+    $ssl   = $port === 465;
+
+    $fp = @stream_socket_client(($ssl ? 'ssl://' : 'tcp://') . $vaert . ':' . $port, $nr, $fejltekst, 15);
+    if (!$fp) {
+        error_log("send.php: kan ikke forbinde til $vaert:$port: $fejltekst");
+        return 'forbind';
+    }
     stream_set_timeout($fp, 15);
 
     // Læs et (evt. flerlinjet) svar og tjek, at koden er den forventede
@@ -103,45 +127,67 @@ function smtpSend(array $cfg, string $til, string $svarTil, string $emne, string
         $linje = '';
         while (($l = fgets($fp, 515)) !== false) {
             $linje = $l;
-            if (isset($l[3]) && $l[3] === ' ') break;   // sidste linje i svaret
+            if (isset($l[3]) && $l[3] === ' ') {
+                break; // sidste linje i svaret
+            }
         }
-        if (strpos($linje, $forventet) !== 0) { error_log('send.php: SMTP-svar: ' . trim($linje)); return false; }
+        if (strpos($linje, $forventet) !== 0) {
+            error_log('send.php: SMTP-svar: ' . trim($linje));
+            return false;
+        }
         return true;
     };
-    $skriv = function (string $kommando) use ($fp): void { fwrite($fp, $kommando . "\r\n"); };
+    $skriv = function (string $kommando) use ($fp): void {
+        fwrite($fp, $kommando . "\r\n");
+    };
+    $stop = function (string $trin) use ($fp, $skriv): string {
+        $skriv('QUIT');
+        fclose($fp);
+        return $trin;
+    };
 
-    $ok = $svar('220')
-       && ($skriv('EHLO danckersystems.dk') || true) && $svar('250')
-       && ($skriv('STARTTLS') || true) && $svar('220')
-       && stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)
-       && ($skriv('EHLO danckersystems.dk') || true) && $svar('250')
-       && ($skriv('AUTH LOGIN') || true) && $svar('334')
-       && ($skriv(base64_encode($cfg['bruger'])) || true) && $svar('334')
-       && ($skriv(base64_encode($cfg['kode'])) || true) && $svar('235')
-       && ($skriv("MAIL FROM:<$fra>") || true) && $svar('250')
-       && ($skriv("RCPT TO:<$til>") || true) && $svar('250')
-       && ($skriv('DATA') || true) && $svar('354');
+    if (!$svar('220')) return $stop('hilsen');
+    $skriv('EHLO danckersystems.dk');
+    if (!$svar('250')) return $stop('hilsen');
 
-    if ($ok) {
-        $headers = [
-            'Date: ' . date('r'),
-            'From: ' . kodHeader('Dancker Systems – formular') . " <$fra>",
-            "To: <$til>",
-            "Reply-To: <$svarTil>",                 // Tryk "Svar", så svarer du direkte til kunden
-            'Subject: ' . kodHeader($emne),
-            'Message-ID: <' . bin2hex(random_bytes(12)) . '@danckersystems.dk>',
-            'MIME-Version: 1.0',
-            'Content-Type: text/plain; charset=UTF-8',
-            'Content-Transfer-Encoding: 8bit',
-        ];
-        // Linjer, der starter med et punktum, skal have et ekstra punktum (SMTP-regel)
-        $krop = preg_replace('/^\./m', '..', str_replace(["\r\n", "\r"], "\n", $tekst));
-        $krop = str_replace("\n", "\r\n", $krop);
-        fwrite($fp, implode("\r\n", $headers) . "\r\n\r\n" . $krop . "\r\n.\r\n");
-        $ok = $svar('250');
+    if (!$ssl) {
+        $skriv('STARTTLS');
+        if (!$svar('220')) return $stop('starttls');
+        if (!@stream_socket_enable_crypto($fp, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) return $stop('tls');
+        $skriv('EHLO danckersystems.dk');
+        if (!$svar('250')) return $stop('tls');
     }
 
-    $skriv('QUIT');
-    fclose($fp);
-    return $ok;
+    $skriv('AUTH LOGIN');
+    if (!$svar('334')) return $stop('login');
+    $skriv(base64_encode($cfg['bruger']));
+    if (!$svar('334')) return $stop('login');
+    $skriv(base64_encode($cfg['kode']));
+    if (!$svar('235')) return $stop('login');
+
+    $skriv("MAIL FROM:<$fra>");
+    if (!$svar('250')) return $stop('afsender');
+    $skriv("RCPT TO:<$til>");
+    if (!$svar('250')) return $stop('modtager');
+    $skriv('DATA');
+    if (!$svar('354')) return $stop('data');
+
+    $headers = [
+        'Date: ' . date('r'),
+        'From: ' . kodHeader('Dancker Systems – formular') . " <$fra>",
+        "To: <$til>",
+        "Reply-To: <$svarTil>", // Tryk "Svar", så svarer du direkte til kunden
+        'Subject: ' . kodHeader($emne),
+        'Message-ID: <' . bin2hex(random_bytes(12)) . '@danckersystems.dk>',
+        'MIME-Version: 1.0',
+        'Content-Type: text/plain; charset=UTF-8',
+        'Content-Transfer-Encoding: 8bit',
+    ];
+    // Linjer, der starter med et punktum, skal have et ekstra punktum (SMTP-regel)
+    $krop = preg_replace('/^\./m', '..', str_replace(["\r\n", "\r"], "\n", $tekst));
+    $krop = str_replace("\n", "\r\n", $krop);
+    fwrite($fp, implode("\r\n", $headers) . "\r\n\r\n" . $krop . "\r\n.\r\n");
+    if (!$svar('250')) return $stop('afvist');
+
+    return $stop('ok');
 }
