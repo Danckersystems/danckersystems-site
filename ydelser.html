@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
   <title>Ydelser – Dancker Systems</title>
   <meta name="description" content="Hjemmesider, små systemer og drift til lokale virksomheder og foreninger. Se hvad det dækker, og hvordan et forløb foregår.">
@@ -135,11 +135,45 @@
       </div>
     </section>
 
+    <!-- Ofte stillede spørgsmål. <details> kan foldes ud uden JavaScript. -->
+    <section id="faq" class="sektion wrap" aria-labelledby="faq-titel">
+      <header class="sektion-hoved">
+        <h2 id="faq-titel" class="sektion-titel">Spørgsmål</h2>
+        <p class="sektion-intro">Det, folk oftest spørger om. Står dit spørgsmål her ikke, så <a class="tekst-link" href="kontakt.html">skriv til mig</a>.</p>
+      </header>
+      <div class="faq">
+        <details>
+          <summary>Hvad koster en hjemmeside?</summary>
+          <p>Det afhænger af, hvor mange sider og funktioner du har brug for. Efter vores første snak får du en fast pris på skrift, før noget går i gang.</p>
+        </details>
+        <details>
+          <summary>Hvor lang tid tager det?</summary>
+          <p>Det afhænger af opgavens størrelse, og hvor hurtigt tekster og billeder er klar. Du får en tidsplan sammen med tilbuddet.</p>
+        </details>
+        <details>
+          <summary>Ejer jeg selv siden bagefter?</summary>
+          <p>Ja. Domæne, kode og indhold står i dit navn. Du kan altid tage siden med til en anden.</p>
+        </details>
+        <details>
+          <summary>Kan jeg selv rette tekster og billeder?</summary>
+          <p>Ja. Du får en kort vejledning, når siden overdrages. Vil du hellere have, at jeg gør det, kan vi aftale det.</p>
+        </details>
+        <details>
+          <summary>Hvad skal jeg selv levere?</summary>
+          <p>Typisk tekster, billeder og dit logo. Har du ikke det hele, hjælper jeg med at finde ud af, hvad der mangler. Det står i kravspecifikationen.</p>
+        </details>
+      </div>
+      <!-- Struktureret data, så Google kan vise spørgsmålene. Det er data, ikke et script, der køres. -->
+      <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Hvad koster en hjemmeside?","acceptedAnswer":{"@type":"Answer","text":"Det afhænger af, hvor mange sider og funktioner du har brug for. Efter vores første snak får du en fast pris på skrift, før noget går i gang."}},{"@type":"Question","name":"Hvor lang tid tager det?","acceptedAnswer":{"@type":"Answer","text":"Det afhænger af opgavens størrelse, og hvor hurtigt tekster og billeder er klar. Du får en tidsplan sammen med tilbuddet."}},{"@type":"Question","name":"Ejer jeg selv siden bagefter?","acceptedAnswer":{"@type":"Answer","text":"Ja. Domæne, kode og indhold står i dit navn. Du kan altid tage siden med til en anden."}},{"@type":"Question","name":"Kan jeg selv rette tekster og billeder?","acceptedAnswer":{"@type":"Answer","text":"Ja. Du får en kort vejledning, når siden overdrages. Vil du hellere have, at jeg gør det, kan vi aftale det."}},{"@type":"Question","name":"Hvad skal jeg selv levere?","acceptedAnswer":{"@type":"Answer","text":"Typisk tekster, billeder og dit logo. Har du ikke det hele, hjælper jeg med at finde ud af, hvad der mangler. Det står i kravspecifikationen."}}]}
+      </script>
+    </section>
+
     <section class="cta-baand lys-flade" aria-labelledby="cta-titel">
       <div class="wrap cta-gitter">
         <h2 id="cta-titel" class="kontakt-stor">Skal vi tage en snak?</h2>
         <div>
-          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for, så vender jeg tilbage.</p>
+          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for. Jeg svarer inden for to hverdage.</p>
           <p class="cta-knapper">
             <a class="knap" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
             <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>
@@ -149,6 +183,9 @@
     </section>
 
   </main>
+
+  <!-- Fast kontaktknap nederst på skærmen, kun på mobil (se .mobil-cta i style.css) -->
+  <a class="mobil-cta" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
 
   <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
   <footer class="bund moerk-flade">

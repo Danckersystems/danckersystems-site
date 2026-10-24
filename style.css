@@ -771,3 +771,42 @@ main > .moerk-flade:only-child{flex:1}
 .status-maerke i{background:#0E1A24}
 .status-boks{border-left-color:var(--status-gul)}
 .status-boks i{background:var(--status-gul);box-shadow:0 0 0 1px #0E1A24}
+
+/* ---------- Ofte stillede spørgsmål ---------- */
+.faq{border-top:1px solid var(--line);max-width:52rem}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{
+  cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:1rem;
+  padding-block:1.25rem;font-weight:800;font-size:clamp(1.125rem,2vw,1.375rem);
+}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-weight:400;font-size:1.5rem;line-height:1;transition:transform .25s var(--ease)}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{color:var(--muted);max-width:42rem;padding-bottom:1.5rem}
+
+/* ---------- Brødkrummer ---------- */
+.broedkrummer{margin-bottom:1.5rem;font-size:0.875rem}
+.broedkrummer ol{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0.4rem}
+.broedkrummer li{color:var(--muted)}
+.broedkrummer li + li::before{content:"/";margin-right:0.4rem;color:var(--line)}
+.broedkrummer a{color:var(--fg);text-underline-offset:0.2em}
+
+/* ---------- Kontakt: svartid og tak-besked ---------- */
+.svartid{margin-top:1.25rem;font-size:1.0625rem}
+
+/* ---------- Fast kontaktknap på mobil ----------
+   Står fast nederst på skærmen på telefoner. Skjult på større skærme, hvor knappen i menuen altid er synlig. */
+.mobil-cta{
+  position:fixed;left:1rem;right:1rem;bottom:max(1rem, env(safe-area-inset-bottom));z-index:30;
+  display:flex;justify-content:center;gap:0.4rem;padding:0.95rem 1rem;
+  background:#F3F5F7;color:#0A1119;font-weight:600;text-decoration:none;
+  box-shadow:0 12px 30px -8px rgba(0,0,0,.55),0 0 0 1px rgba(10,17,25,.15);
+}
+.mobil-cta:active{scale:0.98}
+@media (max-width:47.99rem){body:has(.mobil-cta) .bund{padding-bottom:6.5rem}}   /* plads, så knappen ikke dækker bunden */
+@media (min-width:48rem){.mobil-cta{display:none}}
+
+/* ---------- Formular: fejlbesked og skjult spamfelt ---------- */
+.formular-fejl{padding:0.9rem 1.1rem;border-left:4px solid #B42318;background:#FEF3F2;color:#7A271A;font-weight:600}
+/* Honningkrukken flyttes ud af skærmen (ikke display:none, for nogle robotter springer skjulte felter over) */
+.honning{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}

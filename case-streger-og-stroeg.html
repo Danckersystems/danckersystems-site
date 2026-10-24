@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
   <title>Streger og Strøg – case – Dancker Systems</title>
   <meta name="description" content="Case: hjemmeside til Streger og Strøg, et malerværksted med workshops. Under udvikling.">
@@ -54,6 +54,17 @@
 
     <div class="lys-flade side-flade">
       <header class="side-hoved wrap">
+        <!-- Brødkrummer: viser, hvor man er, og gør det let at gå et niveau op -->
+        <nav class="broedkrummer" aria-label="Brødkrummer">
+          <ol>
+            <li><a href="index.html">Forside</a></li>
+            <li><a href="cases.html">Cases</a></li>
+            <li aria-current="page">Streger og Strøg</li>
+          </ol>
+        </nav>
+        <script type="application/ld+json">
+        {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Forside","item":"https://danckersystems.dk/"},{"@type":"ListItem","position":2,"name":"Cases","item":"https://danckersystems.dk/cases.html"},{"@type":"ListItem","position":3,"name":"Streger og Strøg"}]}
+        </script>
         <h1 class="side-titel"><span class="linje"><span class="ind">Streger og Strøg</span></span></h1>
         <p class="side-intro ind">Hjemmeside til et malerværksted med workshops i malerfagets håndværk.</p>
         <p class="tag side-tag ind">Hjemmeside · Under udvikling</p>
@@ -94,7 +105,7 @@
       <div class="wrap cta-gitter">
         <h2 id="cta-titel" class="kontakt-stor">Skal vi tage en snak?</h2>
         <div>
-          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for, så vender jeg tilbage.</p>
+          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for. Jeg svarer inden for to hverdage.</p>
           <p class="cta-knapper">
             <a class="knap" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
             <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>
@@ -104,6 +115,9 @@
     </section>
 
   </main>
+
+  <!-- Fast kontaktknap nederst på skærmen, kun på mobil (se .mobil-cta i style.css) -->
+  <a class="mobil-cta" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
 
   <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
   <footer class="bund moerk-flade">

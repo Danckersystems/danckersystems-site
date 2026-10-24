@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
   <title>Kontakt – Dancker Systems</title>
   <meta name="description" content="Skriv til Dancker Systems om en ny hjemmeside, en forbedring af din side eller et lille system.">
@@ -64,43 +64,52 @@
       <div class="wrap kontakt-gitter">
         <div class="kontakt-intro">
           <h2 class="kontakt-stor">Skal vi tage en snak?</h2>
+          <p class="svartid"><strong>Jeg svarer inden for to hverdage.</strong></p>
           <p class="kontakt-tekst">Du kan også skrive direkte til</p>
           <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk?subject=Hjemmeside">kontakt@danckersystems.dk</a>
         </div>
 
-        <!-- Kontaktformular. Den sender IKKE data til en server: når man trykker send,
-             åbnes brugerens eget mailprogram med beskeden udfyldt (js/main.js).
-             Uden JavaScript bruger browseren action="mailto:" som reserve.
-             Derfor gemmes eller behandles ingen persondata af siden. -->
-        <form class="formular" id="kontaktformular" action="mailto:kontakt@danckersystems.dk" method="post" enctype="text/plain">
+        <!-- Kontaktformular. Sendes til send.php på serveren, som mailer beskeden til kontakt@.
+             Intet gemmes. Virker også uden JavaScript. -->
+        <form class="formular" id="kontaktformular" action="/send.php" method="post">
+          <!-- Fejlbesked: vises af js/main.js, hvis send.php sender tilbage med ?fejl=... -->
+          <p class="formular-fejl" id="formular-fejl" role="alert" hidden></p>
+
           <div class="felt">
             <label for="f-navn">Navn</label>
-            <input id="f-navn" name="Navn" type="text" autocomplete="name" required>
+            <input id="f-navn" name="navn" type="text" autocomplete="name" maxlength="100" required>
           </div>
           <div class="felt">
             <label for="f-mail">E-mail</label>
-            <input id="f-mail" name="E-mail" type="email" autocomplete="email" required>
+            <input id="f-mail" name="email" type="email" autocomplete="email" maxlength="150" required>
           </div>
           <div class="felt">
             <label for="f-firma">Virksomhed eller forening <span>(valgfri)</span></label>
-            <input id="f-firma" name="Virksomhed" type="text" autocomplete="organization">
+            <input id="f-firma" name="virksomhed" type="text" autocomplete="organization" maxlength="150">
           </div>
 
           <fieldset class="felt valg">
             <legend>Hvad drejer det sig om?</legend>
-            <label><input type="radio" name="Opgave" value="Ny hjemmeside" checked><span>Ny hjemmeside</span></label>
-            <label><input type="radio" name="Opgave" value="Forbedring af en eksisterende side"><span>Forbedring af en side</span></label>
-            <label><input type="radio" name="Opgave" value="Et lille system"><span>Et lille system</span></label>
-            <label><input type="radio" name="Opgave" value="Andet"><span>Andet</span></label>
+            <label><input type="radio" name="opgave" value="Ny hjemmeside" checked><span>Ny hjemmeside</span></label>
+            <label><input type="radio" name="opgave" value="Forbedring af en eksisterende side"><span>Forbedring af en side</span></label>
+            <label><input type="radio" name="opgave" value="Et lille system"><span>Et lille system</span></label>
+            <label><input type="radio" name="opgave" value="Andet"><span>Andet</span></label>
           </fieldset>
 
           <div class="felt">
             <label for="f-besked">Fortæl kort om opgaven</label>
-            <textarea id="f-besked" name="Besked" rows="4" required></textarea>
+            <textarea id="f-besked" name="besked" rows="4" maxlength="5000" required></textarea>
           </div>
 
+          <!-- Spambeskyttelse: et felt, mennesker ikke ser (robotter udfylder det), og et tidsstempel (sættes af js/main.js) -->
+          <div class="honning" aria-hidden="true">
+            <label for="f-hjemmeside">Lad dette felt være tomt</label>
+            <input id="f-hjemmeside" name="hjemmeside" type="text" tabindex="-1" autocomplete="off">
+          </div>
+          <input type="hidden" name="start" id="f-start" value="">
+
           <button class="knap" type="submit">Send forespørgsel <span aria-hidden="true">→</span></button>
-          <p class="formular-note">Når du trykker send, åbnes dit mailprogram med beskeden udfyldt. Siden gemmer ikke det, du skriver. <a href="privatliv.html">Læs mere om privatliv</a>.</p>
+          <p class="formular-note">Beskeden sendes direkte til mig som mail. Siden gemmer ikke det, du skriver. <a href="privatliv.html">Læs mere om privatliv</a>.</p>
         </form>
       </div>
     </section>

@@ -27,7 +27,7 @@ ErrorDocument 404 /404.html
 # ---------- Sikkerhedsheaders ----------
 <IfModule mod_headers.c>
   # Samme regler som meta-tagget i HTML, plus frame-ancestors (siden må ikke vises inde i andres sider)
-  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:; frame-ancestors 'none'"
+  Header always set Content-Security-Policy "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'"
   # Browseren skal altid bruge HTTPS i et år
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
   # X-Content-Type-Options sætter Simply selv, så den står ikke her (ellers kommer den to gange)

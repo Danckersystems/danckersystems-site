@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
   <title>Siden findes ikke – Dancker Systems</title>
   <meta name="description" content="Siden findes ikke.">
@@ -51,6 +51,9 @@
       </header>
     </div>
   </main>
+
+  <!-- Fast kontaktknap nederst på skærmen, kun på mobil (se .mobil-cta i style.css) -->
+  <a class="mobil-cta" href="/kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
 
   <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
   <footer class="bund moerk-flade">

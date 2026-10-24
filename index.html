@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
   <title>Dancker Systems – hjemmesider til lokale virksomheder</title>
   <meta name="description" content="Hjemmesider og små systemer til lokale virksomheder og foreninger. Du taler med den, der bygger siden, og du ejer domæne, kode og indhold.">
@@ -29,6 +29,10 @@
   <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
   <link rel="preload" href="fonts/SchibstedGrotesk-800.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css">
+  <!-- Struktureret data om virksomheden til Google. Adresse og CVR tilføjes, når de findes. -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"ProfessionalService","name":"Dancker Systems","url":"https://danckersystems.dk/","logo":"https://danckersystems.dk/img/og-image.png","image":"https://danckersystems.dk/img/og-image.png","email":"kontakt@danckersystems.dk","description":"Hjemmesider og små systemer til lokale virksomheder og foreninger.","founder":{"@type":"Person","name":"Rasmus Bøgelund Dancker"},"areaServed":{"@type":"Country","name":"Danmark"},"knowsLanguage":"da"}
+  </script>
 </head>
 <body>
   <a class="skip" href="#indhold">Spring til indhold</a>
@@ -165,7 +169,7 @@
       <div class="wrap cta-gitter">
         <h2 id="cta-titel" class="kontakt-stor">Skal vi tage en snak?</h2>
         <div>
-          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for, så vender jeg tilbage.</p>
+          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for. Jeg svarer inden for to hverdage.</p>
           <p class="cta-knapper">
             <a class="knap" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
             <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>
@@ -175,6 +179,9 @@
     </section>
 
   </main>
+
+  <!-- Fast kontaktknap nederst på skærmen, kun på mobil (se .mobil-cta i style.css) -->
+  <a class="mobil-cta" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
 
   <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
   <footer class="bund moerk-flade">

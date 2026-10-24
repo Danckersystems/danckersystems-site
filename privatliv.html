@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
-       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       form-action 'self' tillader kun, at formularen åbner mailprogrammet.
        frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action 'self'">
   <meta name="referrer" content="no-referrer">
   <title>Privatliv – Dancker Systems</title>
   <meta name="description" content="Sådan håndterer Dancker Systems dine oplysninger: ingen cookies, ingen tracking, og siden gemmer ikke det, du skriver.">
@@ -54,7 +54,7 @@
     <div class="lys-flade side-flade">
       <header class="side-hoved wrap">
         <h1 class="side-titel"><span class="linje"><span class="ind">Privatliv</span></span></h1>
-        <p class="side-intro ind">Kort fortalt: siden bruger ingen cookies og ingen tracking, og den gemmer ikke det, du skriver.</p>
+        <p class="side-intro ind">Kort fortalt: siden bruger ingen cookies og ingen tracking, og det, du skriver i formularen, sendes kun til mig som mail.</p>
       </header>
     </div>
 
@@ -69,7 +69,7 @@
         <p>Siden sætter ingen cookies og bruger ingen analyseværktøjer, annoncer eller anden tracking. Skrifttyper, billeder og scripts ligger på siden selv, så dit besøg sendes ikke videre til andre.</p>
 
         <h2>Kontaktformularen</h2>
-        <p>Formularen sender ikke noget via siden. Når du trykker send, åbnes dit eget mailprogram med beskeden udfyldt, og du vælger selv, om du vil sende den.</p>
+        <p>Når du sender formularen, sendes navn, e-mail, eventuel virksomhed, opgavetype og din besked som en mail til kontakt@danckersystems.dk. Siden gemmer ikke oplysningerne i en database eller fil; de findes kun i den mail, jeg modtager. Mailen sendes via webhotellet hos Simply.com, som også står for min mail.</p>
 
         <h2>Når du skriver til mig</h2>
         <p>Sender du en mail, modtager jeg dit navn, din mailadresse og det, du skriver. Jeg bruger det kun til at svare dig og eventuelt lave et tilbud. Jeg giver det ikke videre, og jeg gemmer det kun så længe, det er nødvendigt for at besvare henvendelsen eller for et samarbejde.</p>
@@ -82,6 +82,9 @@
       </div>
     </section>
   </main>
+
+  <!-- Fast kontaktknap nederst på skærmen, kun på mobil (se .mobil-cta i style.css) -->
+  <a class="mobil-cta" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
 
   <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
   <footer class="bund moerk-flade">

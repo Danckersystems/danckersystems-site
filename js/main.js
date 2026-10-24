@@ -168,24 +168,19 @@ mm.add("(prefers-reduced-motion: no-preference)", () => {
 
 // ---------- Kontaktformular ----------
 // Kører altid (også med "reducer bevægelse"), fordi det ikke er en animation.
-// Formularen sender ikke noget til en server. Når man trykker send, bygger vi en mail
-// med det udfyldte og åbner brugerens eget mailprogram. Browseren tjekker de påkrævede
-// felter, før "submit" overhovedet sker.
+// Selve afsendelsen sker i send.php på serveren. Her gør vi kun to små ting:
 const formular = document.getElementById("kontaktformular");
 if (formular) {
-  formular.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const data = new FormData(formular);
-    const emne = `Forespørgsel: ${data.get("Opgave")} – ${data.get("Navn")}`;
-    const tekst = [
-      `Navn: ${data.get("Navn")}`,
-      `E-mail: ${data.get("E-mail")}`,
-      `Virksomhed: ${data.get("Virksomhed") || "-"}`,
-      `Opgave: ${data.get("Opgave")}`,
-      "",
-      data.get("Besked"),
-    ].join("\n");
-    window.location.href =
-      `mailto:kontakt@danckersystems.dk?subject=${encodeURIComponent(emne)}&body=${encodeURIComponent(tekst)}`;
-  });
+  // 1) Tidsstempel til spambeskyttelsen (send.php afviser formularer, der sendes på under 3 sekunder)
+  document.getElementById("f-start").value = Math.floor(Date.now() / 1000);
+
+  // 2) Vis en fejlbesked, hvis send.php har sendt os tilbage med ?fejl=1 eller ?fejl=2
+  const fejl = new URLSearchParams(location.search).get("fejl");
+  const boks = document.getElementById("formular-fejl");
+  if (fejl && boks) {
+    boks.textContent = fejl === "2"
+      ? "Beskeden kunne ikke sendes lige nu. Prøv igen, eller skriv direkte til kontakt@danckersystems.dk."
+      : "Tjek venligst felterne: navn, en gyldig e-mail og en kort besked skal udfyldes.";
+    boks.hidden = false;
+  }
 }
