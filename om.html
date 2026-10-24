@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
+       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta name="referrer" content="no-referrer">
+  <title>Om mig – Dancker Systems</title>
+  <meta name="description" content="Rasmus Bøgelund Dancker står bag Dancker Systems og laver hjemmesider til lokale virksomheder og foreninger.">
+  <!-- Deling på sociale medier (Open Graph). Billedet skal have fuld adresse med domænet. -->
+  <link rel="canonical" href="https://danckersystems.dk/om.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dancker Systems">
+  <meta property="og:locale" content="da_DK">
+  <meta property="og:title" content="Om mig – Dancker Systems">
+  <meta property="og:description" content="Rasmus Bøgelund Dancker står bag Dancker Systems og laver hjemmesider til lokale virksomheder og foreninger.">
+  <meta property="og:url" content="https://danckersystems.dk/om.html">
+  <meta property="og:image" content="https://danckersystems.dk/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dancker Systems – hjemmesider og systemer, der er bygget ordentligt.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+  <link rel="preload" href="fonts/SchibstedGrotesk-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+
+  <!-- MENU: den samme på alle sider. Ændrer du den, så ret den i alle .html-filer. -->
+  <div class="moerk-flade top-bar">
+  <header class="top wrap">
+    <a class="logo" href="index.html" aria-label="Dancker Systems, til forsiden">
+      <img src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39">
+    </a>
+    <nav aria-label="Hovedmenu">
+      <ul>
+        <li><a href="cases.html">Cases</a></li>
+        <li><a href="ydelser.html">Ydelser</a></li>
+        <li><a href="om.html" aria-current="page">Om mig</a></li>
+        <li><a class="nav-kontakt" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  </div>
+
+  <main id="indhold">
+
+    <div class="moerk-flade hero-flade">
+    <section class="hero wrap" aria-labelledby="om-titel">
+      <div class="hero-tekst">
+        <h1 id="om-titel" class="hero-titel"><span class="linje"><span class="ind">Om mig</span></span></h1>
+        <p class="hero-lead ind">Hej, jeg hedder Rasmus. Jeg står bag Dancker Systems og laver det hele selv, fra første snak til siden kører.</p>
+      </div>
+      <figure class="hero-foto">
+        <img src="img/rasmus.webp" srcset="img/rasmus-400.webp 400w, img/rasmus.webp 720w" sizes="(min-width: 60rem) 23rem, calc(100vw - 2rem)" alt="Rasmus Bøgelund Dancker" width="720" height="900" fetchpriority="high">
+        <figcaption class="navnekort lys-flade">
+          <strong>Rasmus Bøgelund Dancker</strong>
+          <span>Webudvikler · Dancker Systems</span>
+        </figcaption>
+      </figure>
+    </section>
+    </div>
+
+    <section class="sektion wrap" aria-labelledby="historie-titel">
+      <header class="sektion-hoved">
+        <h2 id="historie-titel" class="sektion-titel">Sådan startede det</h2>
+      </header>
+      <div class="om">
+        <div class="om-tekst">
+          <p class="stor-tekst">Min første hjemmeside lavede jeg til min mor, der ville starte en kreativ workshop. Det gav mig lyst til at fortsætte.</p>
+          <p class="om-historie">Ved siden af HHX laver jeg nu hjemmesider til lokale virksomheder og foreninger. <a class="tekst-link" href="case-streger-og-stroeg.html">Se min mors side <span aria-hidden="true">→</span></a></p>
+        </div>
+        <ul class="fordele">
+          <li><strong>Du ejer det hele.</strong> Domæne, kode og indhold står i dit navn.</li>
+          <li><strong>Én fast kontakt.</strong> Ingen mellemled og ingen supportkø.</li>
+          <li><strong>Bygget til mobilen.</strong> Der, hvor dine kunder er.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="cta-baand lys-flade" aria-labelledby="cta-titel">
+      <div class="wrap cta-gitter">
+        <h2 id="cta-titel" class="kontakt-stor">Skal vi tage en snak?</h2>
+        <div>
+          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for, så vender jeg tilbage.</p>
+          <p class="cta-knapper">
+            <a class="knap" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
+            <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
+  <footer class="bund moerk-flade">
+    <div class="wrap">
+      <div class="bund-gitter">
+        <div class="bund-om">
+          <a href="index.html" aria-label="Dancker Systems, til forsiden">
+            <img class="bund-logo" src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39" loading="lazy">
+          </a>
+          <p>Hjemmesider og små systemer til lokale virksomheder og foreninger.</p>
+        </div>
+        <nav class="bund-kolonne" aria-label="Sider">
+          <h2>Sider</h2>
+          <ul>
+            <li><a href="cases.html">Cases</a></li>
+            <li><a href="ydelser.html">Ydelser</a></li>
+            <li><a href="om.html">Om mig</a></li>
+            <li><a href="kontakt.html">Kontakt</a></li>
+          </ul>
+        </nav>
+        <div class="bund-kolonne">
+          <h2>Kontakt</h2>
+          <ul>
+            <li><a href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a></li>
+            <li><a href="kontakt.html">Skriv en forespørgsel</a></li>
+          </ul>
+        </div>
+        <div class="bund-kolonne">
+          <h2>Virksomhed</h2>
+          <ul>
+            <li>Rasmus Bøgelund Dancker</li>
+            <li>CVR: følger</li>
+            <li><a href="privatliv.html">Privatliv</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bund-linje">
+        <p>© 2026 Dancker Systems</p>
+        <a class="til-toppen" href="#indhold">Til toppen <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bevægelse. Defer: scriptsene hentes uden at blokere og køres i rækkefølge, når HTML er læst. -->
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/SplitText.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

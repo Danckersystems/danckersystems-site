@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
+       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta name="referrer" content="no-referrer">
+  <title>Privatliv – Dancker Systems</title>
+  <meta name="description" content="Sådan håndterer Dancker Systems dine oplysninger: ingen cookies, ingen tracking, og siden gemmer ikke det, du skriver.">
+  <!-- Deling på sociale medier (Open Graph). Billedet skal have fuld adresse med domænet. -->
+  <link rel="canonical" href="https://danckersystems.dk/privatliv.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dancker Systems">
+  <meta property="og:locale" content="da_DK">
+  <meta property="og:title" content="Privatliv – Dancker Systems">
+  <meta property="og:description" content="Sådan håndterer Dancker Systems dine oplysninger: ingen cookies, ingen tracking, og siden gemmer ikke det, du skriver.">
+  <meta property="og:url" content="https://danckersystems.dk/privatliv.html">
+  <meta property="og:image" content="https://danckersystems.dk/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dancker Systems – hjemmesider og systemer, der er bygget ordentligt.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+  <link rel="preload" href="fonts/SchibstedGrotesk-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+
+  <!-- MENU: den samme på alle sider. Ændrer du den, så ret den i alle .html-filer. -->
+  <div class="moerk-flade top-bar">
+  <header class="top wrap">
+    <a class="logo" href="index.html" aria-label="Dancker Systems, til forsiden">
+      <img src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39">
+    </a>
+    <nav aria-label="Hovedmenu">
+      <ul>
+        <li><a href="cases.html">Cases</a></li>
+        <li><a href="ydelser.html">Ydelser</a></li>
+        <li><a href="om.html">Om mig</a></li>
+        <li><a class="nav-kontakt" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  </div>
+
+  <main id="indhold">
+    <div class="lys-flade side-flade">
+      <header class="side-hoved wrap">
+        <h1 class="side-titel"><span class="linje"><span class="ind">Privatliv</span></span></h1>
+        <p class="side-intro ind">Kort fortalt: siden bruger ingen cookies og ingen tracking, og den gemmer ikke det, du skriver.</p>
+      </header>
+    </div>
+
+    <!-- RASMUS: Dette er en enkel privatlivstekst, ikke juridisk rådgivning.
+         Opdatér hosting-afsnittet, når hosting er valgt, og CVR, når det findes. -->
+    <section class="sektion wrap" aria-label="Privatlivspolitik">
+      <div class="tekst-side">
+        <h2>Hvem står bag</h2>
+        <p>Dancker Systems v/ Rasmus Bøgelund Dancker. CVR: følger. Kontakt: <a href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>.</p>
+
+        <h2>Cookies og tracking</h2>
+        <p>Siden sætter ingen cookies og bruger ingen analyseværktøjer, annoncer eller anden tracking. Skrifttyper, billeder og scripts ligger på siden selv, så dit besøg sendes ikke videre til andre.</p>
+
+        <h2>Kontaktformularen</h2>
+        <p>Formularen sender ikke noget via siden. Når du trykker send, åbnes dit eget mailprogram med beskeden udfyldt, og du vælger selv, om du vil sende den.</p>
+
+        <h2>Når du skriver til mig</h2>
+        <p>Sender du en mail, modtager jeg dit navn, din mailadresse og det, du skriver. Jeg bruger det kun til at svare dig og eventuelt lave et tilbud. Jeg giver det ikke videre, og jeg gemmer det kun så længe, det er nødvendigt for at besvare henvendelsen eller for et samarbejde.</p>
+
+        <h2>Hosting</h2>
+        <p>Når du besøger siden, kan udbyderen, der hoster den, registrere tekniske oplysninger som din IP-adresse for at kunne vise siden og beskytte den mod misbrug.</p>
+
+        <h2>Dine rettigheder</h2>
+        <p>Du kan altid bede om at se, rette eller få slettet de oplysninger, jeg har om dig. Skriv til <a href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>. Er du utilfreds, kan du klage til Datatilsynet.</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
+  <footer class="bund moerk-flade">
+    <div class="wrap">
+      <div class="bund-gitter">
+        <div class="bund-om">
+          <a href="index.html" aria-label="Dancker Systems, til forsiden">
+            <img class="bund-logo" src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39" loading="lazy">
+          </a>
+          <p>Hjemmesider og små systemer til lokale virksomheder og foreninger.</p>
+        </div>
+        <nav class="bund-kolonne" aria-label="Sider">
+          <h2>Sider</h2>
+          <ul>
+            <li><a href="cases.html">Cases</a></li>
+            <li><a href="ydelser.html">Ydelser</a></li>
+            <li><a href="om.html">Om mig</a></li>
+            <li><a href="kontakt.html">Kontakt</a></li>
+          </ul>
+        </nav>
+        <div class="bund-kolonne">
+          <h2>Kontakt</h2>
+          <ul>
+            <li><a href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a></li>
+            <li><a href="kontakt.html">Skriv en forespørgsel</a></li>
+          </ul>
+        </div>
+        <div class="bund-kolonne">
+          <h2>Virksomhed</h2>
+          <ul>
+            <li>Rasmus Bøgelund Dancker</li>
+            <li>CVR: følger</li>
+            <li><a href="privatliv.html">Privatliv</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bund-linje">
+        <p>© 2026 Dancker Systems</p>
+        <a class="til-toppen" href="#indhold">Til toppen <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bevægelse. Defer: scriptsene hentes uden at blokere og køres i rækkefølge, når HTML er læst. -->
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/SplitText.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

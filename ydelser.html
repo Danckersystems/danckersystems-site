@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
+       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta name="referrer" content="no-referrer">
+  <title>Ydelser – Dancker Systems</title>
+  <meta name="description" content="Hjemmesider, små systemer og drift til lokale virksomheder og foreninger. Se hvad det dækker, og hvordan et forløb foregår.">
+  <!-- Deling på sociale medier (Open Graph). Billedet skal have fuld adresse med domænet. -->
+  <link rel="canonical" href="https://danckersystems.dk/ydelser.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dancker Systems">
+  <meta property="og:locale" content="da_DK">
+  <meta property="og:title" content="Ydelser – Dancker Systems">
+  <meta property="og:description" content="Hjemmesider, små systemer og drift til lokale virksomheder og foreninger. Se hvad det dækker, og hvordan et forløb foregår.">
+  <meta property="og:url" content="https://danckersystems.dk/ydelser.html">
+  <meta property="og:image" content="https://danckersystems.dk/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dancker Systems – hjemmesider og systemer, der er bygget ordentligt.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+  <link rel="preload" href="fonts/SchibstedGrotesk-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+
+  <!-- MENU: den samme på alle sider. Ændrer du den, så ret den i alle .html-filer. -->
+  <div class="moerk-flade top-bar">
+  <header class="top wrap">
+    <a class="logo" href="index.html" aria-label="Dancker Systems, til forsiden">
+      <img src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39">
+    </a>
+    <nav aria-label="Hovedmenu">
+      <ul>
+        <li><a href="cases.html">Cases</a></li>
+        <li><a href="ydelser.html" aria-current="page">Ydelser</a></li>
+        <li><a href="om.html">Om mig</a></li>
+        <li><a class="nav-kontakt" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  </div>
+
+  <main id="indhold">
+
+    <div class="moerk-flade hero-flade">
+      <header class="side-hoved side-hoved-delt wrap">
+        <div>
+          <h1 class="side-titel"><span class="linje"><span class="ind">Ydelser</span></span></h1>
+          <p class="side-intro ind">Hjemmesider, små systemer og drift. Du får én fast kontakt hele vejen, og du ejer det hele bagefter.</p>
+        </div>
+        <!-- Genveje til de tre ydelser længere nede -->
+        <nav class="ydelse-genveje" aria-label="Ydelser på siden">
+          <a href="#hjemmesider"><span>01</span>Hjemmesider<i aria-hidden="true">↓</i></a>
+          <a href="#systemer"><span>02</span>Små systemer<i aria-hidden="true">↓</i></a>
+          <a href="#drift"><span>03</span>Drift<i aria-hidden="true">↓</i></a>
+        </nav>
+      </header>
+    </div>
+
+    <section class="sektion wrap" aria-label="Ydelser">
+      <div class="ydelse-liste">
+
+      <article id="hjemmesider" class="ydelse-detalje">
+        <p class="ydelse-nr" aria-hidden="true">01</p>
+        <div>
+          <h2>Hjemmesider</h2>
+        </div>
+        <div>
+          <p class="ydelse-tekst">En ny side fra bunden, eller en gammel side, der trænger til et løft. Med dit indhold, dine billeder og din stil.</p>
+          <ul class="punkt-liste">
+            <li>Nye sider fra bunden</li>
+            <li>Ny version af en side, du allerede har</li>
+            <li>Virker på mobil, tablet og computer</li>
+          </ul>
+        </div>
+      </article>
+
+      <article id="systemer" class="ydelse-detalje">
+        <p class="ydelse-nr" aria-hidden="true">02</p>
+        <div>
+          <h2>Små systemer</h2>
+        </div>
+        <div>
+          <p class="ydelse-tekst">Det, der i dag ligger i et regneark eller en fyldt indbakke, kan ofte løses med et lille system bygget til netop dig.</p>
+          <ul class="punkt-liste">
+            <li>Booking af tider eller lokaler</li>
+            <li>Tilmelding til hold og arrangementer</li>
+            <li>Medlemslister og bestillinger</li>
+          </ul>
+        </div>
+      </article>
+
+      <article id="drift" class="ydelse-detalje">
+        <p class="ydelse-nr" aria-hidden="true">03</p>
+        <div>
+          <h2>Drift</h2>
+        </div>
+        <div>
+          <p class="ydelse-tekst">Når siden er i luften, kan jeg holde den kørende og opdateret, så du kan passe din forretning.</p>
+          <ul class="punkt-liste">
+            <li>Opdateringer og små rettelser</li>
+            <li>Hjælp, når noget skal ændres</li>
+            <li>Overblik over domæne og hosting</li>
+          </ul>
+        </div>
+      </article>
+      </div>
+    </section>
+
+    <section id="processen" class="sektion wrap" aria-labelledby="forloeb-titel">
+      <header class="sektion-hoved">
+        <h2 id="forloeb-titel" class="sektion-titel">Processen</h2>
+        <p class="sektion-intro">Fem trin. Alt aftales på skrift, før jeg går i gang.</p>
+      </header>
+      <div class="forloeb-holder">
+        <!-- Linje gennem numrene, der fyldes, mens man scroller (js/main.js) -->
+        <div class="forloeb-linje" aria-hidden="true"><span></span></div>
+        <ol class="forloeb">
+          <li><h3>Samtale</h3><p>Vi taler om din forretning, og hvad siden skal kunne.</p></li>
+          <li><h3>Kravspecifikation</h3><p>Jeg skriver ned, hvad siden skal indeholde. Du godkender.</p></li>
+          <li><h3>Tilbud</h3><p>Pris og tidsplan på skrift, før vi går i gang.</p></li>
+          <li><h3>Design og udvikling</h3><p>Du ser siden undervejs og retter til.</p></li>
+          <li><h3>Lancering</h3><p>Siden går i luften i dit navn.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="cta-baand lys-flade" aria-labelledby="cta-titel">
+      <div class="wrap cta-gitter">
+        <h2 id="cta-titel" class="kontakt-stor">Skal vi tage en snak?</h2>
+        <div>
+          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for, så vender jeg tilbage.</p>
+          <p class="cta-knapper">
+            <a class="knap" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
+            <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
+  <footer class="bund moerk-flade">
+    <div class="wrap">
+      <div class="bund-gitter">
+        <div class="bund-om">
+          <a href="index.html" aria-label="Dancker Systems, til forsiden">
+            <img class="bund-logo" src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39" loading="lazy">
+          </a>
+          <p>Hjemmesider og små systemer til lokale virksomheder og foreninger.</p>
+        </div>
+        <nav class="bund-kolonne" aria-label="Sider">
+          <h2>Sider</h2>
+          <ul>
+            <li><a href="cases.html">Cases</a></li>
+            <li><a href="ydelser.html">Ydelser</a></li>
+            <li><a href="om.html">Om mig</a></li>
+            <li><a href="kontakt.html">Kontakt</a></li>
+          </ul>
+        </nav>
+        <div class="bund-kolonne">
+          <h2>Kontakt</h2>
+          <ul>
+            <li><a href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a></li>
+            <li><a href="kontakt.html">Skriv en forespørgsel</a></li>
+          </ul>
+        </div>
+        <div class="bund-kolonne">
+          <h2>Virksomhed</h2>
+          <ul>
+            <li>Rasmus Bøgelund Dancker</li>
+            <li>CVR: følger</li>
+            <li><a href="privatliv.html">Privatliv</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bund-linje">
+        <p>© 2026 Dancker Systems</p>
+        <a class="til-toppen" href="#indhold">Til toppen <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bevægelse. Defer: scriptsene hentes uden at blokere og køres i rækkefølge, når HTML er læst. -->
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/SplitText.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Streng CSP: kun filer fra vores eget domæne. Kun egne scripts (js/), ingen eksterne kald.
+       form-action mailto: tillader kun, at formularen åbner mailprogrammet.
+       frame-ancestors og HSTS virker ikke i et meta-tag; de sættes som headers hos hostingen. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; base-uri 'none'; form-action mailto:">
+  <meta name="referrer" content="no-referrer">
+  <title>Streger og Strøg – case – Dancker Systems</title>
+  <meta name="description" content="Case: hjemmeside til Streger og Strøg, et malerværksted med workshops. Under udvikling.">
+  <!-- Deling på sociale medier (Open Graph). Billedet skal have fuld adresse med domænet. -->
+  <link rel="canonical" href="https://danckersystems.dk/case-streger-og-stroeg.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Dancker Systems">
+  <meta property="og:locale" content="da_DK">
+  <meta property="og:title" content="Streger og Strøg – case – Dancker Systems">
+  <meta property="og:description" content="Case: hjemmeside til Streger og Strøg, et malerværksted med workshops. Under udvikling.">
+  <meta property="og:url" content="https://danckersystems.dk/case-streger-og-stroeg.html">
+  <meta property="og:image" content="https://danckersystems.dk/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Dancker Systems – hjemmesider og systemer, der er bygget ordentligt.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.ico" sizes="32x32">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon-180.png">
+  <link rel="preload" href="fonts/SchibstedGrotesk-800.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip" href="#indhold">Spring til indhold</a>
+
+  <!-- MENU: den samme på alle sider. Ændrer du den, så ret den i alle .html-filer. -->
+  <div class="moerk-flade top-bar">
+  <header class="top wrap">
+    <a class="logo" href="index.html" aria-label="Dancker Systems, til forsiden">
+      <img src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39">
+    </a>
+    <nav aria-label="Hovedmenu">
+      <ul>
+        <li><a href="cases.html" aria-current="page">Cases</a></li>
+        <li><a href="ydelser.html">Ydelser</a></li>
+        <li><a href="om.html">Om mig</a></li>
+        <li><a class="nav-kontakt" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a></li>
+      </ul>
+    </nav>
+  </header>
+  </div>
+
+  <main id="indhold">
+
+    <div class="lys-flade side-flade">
+      <header class="side-hoved wrap">
+        <h1 class="side-titel"><span class="linje"><span class="ind">Streger og Strøg</span></span></h1>
+        <p class="side-intro ind">Hjemmeside til et malerværksted med workshops i malerfagets håndværk.</p>
+        <p class="tag side-tag ind">Hjemmeside · Under udvikling</p>
+        <!-- Tydelig besked om, at casen ikke er færdig -->
+        <p class="status-boks ind"><i aria-hidden="true"></i><span><strong>Under udvikling.</strong> Siden er ikke lanceret endnu. Skærmbillederne viser et udkast, og navne og tekster kan ændre sig.</span></p>
+      </header>
+    </div>
+
+    <section class="sektion wrap case-side" aria-label="Om casen">
+      <!-- Hele forsiden i et browservindue -->
+      <div class="browser-ramme case-hel">
+        <span class="status-maerke"><i aria-hidden="true"></i>Under udvikling</span>
+        <span class="browser-bar" aria-hidden="true"><i></i><i></i><i></i></span>
+        <img src="img/case-streger-hel.webp" srcset="img/case-streger-hel-600.webp 600w, img/case-streger-hel.webp 1000w" sizes="(min-width: 60rem) 40rem, calc(100vw - 2rem)" alt="Hele forsiden af Streger og Strøg på computer" width="1000" height="1750" loading="lazy">
+      </div>
+
+      <div class="case-tekst">
+        <dl class="fakta-liste">
+          <div><dt>Branche</dt><dd>Kreative workshops</dd></div>
+          <div><dt>Opgave</dt><dd>Ny hjemmeside</dd></div>
+          <div><dt>Status</dt><dd>Under udvikling</dd></div>
+        </dl>
+
+        <h2>Opgaven</h2>
+        <p>Streger og Strøg holder workshops i malerfagets håndværk, som marmorering, ådring og kalkmaling. Siden skal vise de kommende workshops, forklare teknikkerne og gøre det let at spørge om en workshop ude hos jer eller at leje værkstedet.</p>
+
+        <h2>Løsningen</h2>
+        <p>En varm, håndlavet stil med penselstrøg, tape og drypkanter, der passer til et værksted. Billeder fra rigtige workshops øverst, og teknikkerne vist som farveprøver. Siden er lavet til både mobil og computer.</p>
+
+        <img class="case-mobil-stor" src="img/case-streger-mobil.webp" srcset="img/case-streger-mobil-240.webp 240w, img/case-streger-mobil.webp 420w" sizes="9rem" alt="Forsiden af Streger og Strøg på mobil" width="420" height="860" loading="lazy">
+
+        <p class="case-note">Siden er ikke lanceret endnu. Navne og tekster på den er et udkast.</p>
+        <p><a class="tekst-link" href="cases.html"><span aria-hidden="true">←</span> Alle cases</a></p>
+      </div>
+    </section>
+
+    <section class="cta-baand lys-flade" aria-labelledby="cta-titel">
+      <div class="wrap cta-gitter">
+        <h2 id="cta-titel" class="kontakt-stor">Skal vi tage en snak?</h2>
+        <div>
+          <p class="kontakt-tekst">Fortæl kort, hvad du har brug for, så vender jeg tilbage.</p>
+          <p class="cta-knapper">
+            <a class="knap" href="kontakt.html">Kontakt mig <span aria-hidden="true">→</span></a>
+            <a class="kontakt-mail" href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- BUND: den samme på alle sider. Altid mørk, så den spejler toppen. -->
+  <footer class="bund moerk-flade">
+    <div class="wrap">
+      <div class="bund-gitter">
+        <div class="bund-om">
+          <a href="index.html" aria-label="Dancker Systems, til forsiden">
+            <img class="bund-logo" src="img/logo-vandret-paa-moerk.svg" alt="Dancker Systems" width="200" height="39" loading="lazy">
+          </a>
+          <p>Hjemmesider og små systemer til lokale virksomheder og foreninger.</p>
+        </div>
+        <nav class="bund-kolonne" aria-label="Sider">
+          <h2>Sider</h2>
+          <ul>
+            <li><a href="cases.html">Cases</a></li>
+            <li><a href="ydelser.html">Ydelser</a></li>
+            <li><a href="om.html">Om mig</a></li>
+            <li><a href="kontakt.html">Kontakt</a></li>
+          </ul>
+        </nav>
+        <div class="bund-kolonne">
+          <h2>Kontakt</h2>
+          <ul>
+            <li><a href="mailto:kontakt@danckersystems.dk">kontakt@danckersystems.dk</a></li>
+            <li><a href="kontakt.html">Skriv en forespørgsel</a></li>
+          </ul>
+        </div>
+        <div class="bund-kolonne">
+          <h2>Virksomhed</h2>
+          <ul>
+            <li>Rasmus Bøgelund Dancker</li>
+            <li>CVR: følger</li>
+            <li><a href="privatliv.html">Privatliv</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="bund-linje">
+        <p>© 2026 Dancker Systems</p>
+        <a class="til-toppen" href="#indhold">Til toppen <span aria-hidden="true">↑</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bevægelse. Defer: scriptsene hentes uden at blokere og køres i rækkefølge, når HTML er læst. -->
+  <script src="js/vendor/gsap.min.js" defer></script>
+  <script src="js/vendor/ScrollTrigger.min.js" defer></script>
+  <script src="js/vendor/SplitText.min.js" defer></script>
+  <script src="js/vendor/lenis.min.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

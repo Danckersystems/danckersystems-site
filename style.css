@@ -1,0 +1,773 @@
+/* Dancker Systems – portfolio-side
+   Stil: redaktionel og plakatagtig. Stor typografi, tynde streger, asymmetrisk gitter.
+   Opbygget efter AIDA: Attention (hero), Interest (ydelser), Desire (cases, om mig, forløb), Action (kontakt).
+   Ingen accentfarve: hierarki skabes med vægt, størrelse og Skifer.
+   Mobil først: grundreglerne gælder små skærme, @media tilføjer til større. */
+
+/* ---------- Skrifttype (selv-hostet, ingen kald til Google) ---------- */
+@font-face{font-family:"Schibsted Grotesk";font-weight:400;font-display:swap;src:url("fonts/SchibstedGrotesk-400.woff2") format("woff2")}
+@font-face{font-family:"Schibsted Grotesk";font-weight:600;font-display:swap;src:url("fonts/SchibstedGrotesk-600.woff2") format("woff2")}
+@font-face{font-family:"Schibsted Grotesk";font-weight:800;font-display:swap;src:url("fonts/SchibstedGrotesk-800.woff2") format("woff2")}
+
+/* ---------- Farver (fra Brand-kit/04_Farver/brand.css) ---------- */
+:root{
+  --bg:#F3F5F7;          /* Papir */
+  --fg:#0E1A24;          /* Blæk */
+  --muted:#56646F;       /* Skifer */
+  --line:#D6DCE1;
+  --blok:#E2E7EB;        /* striber i pladsholdere */
+  --button-bg:#0E1A24;
+  --button-fg:#F3F5F7;
+  --band:#0E1A24;        /* mørke casekort */
+  --lys-flade:#FFFFFF;   /* lyse kontrastflader: "Næste case" og kontakt */
+  --font:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+/* Mørk tilstand følger brugerens system.
+   Siden bruger Blæk som baggrund, så toppen i Dyb nat stadig skiller sig ud. */
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0E1A24;        /* Blæk */
+    --fg:#EEF2F5;
+    --muted:#93A1AD;     /* Dis */
+    --line:#26323E;
+    --blok:#121E29;
+    --button-bg:#EEF2F5;
+    --button-fg:#0A1119;
+    --band:#0A1119;      /* Dyb nat */
+    --lys-flade:#F3F5F7; /* Papir */
+  }
+}
+
+/* Kontrastflader: farverne skiftes ud lokalt, så alt indeni (tekst, streger, knapper, fokus) følger med.
+   Mørk flade: toppen og hero, altid mørk. Lys flade: altid lys, også i mørk tilstand. */
+.moerk-flade{
+  --bg:#0A1119;--fg:#EEF2F5;--muted:#93A1AD;--line:#26323E;
+  --button-bg:#EEF2F5;--button-fg:#0A1119;
+  background:#0A1119;color:var(--fg);
+}
+.lys-flade{
+  --bg:var(--lys-flade);--fg:#0E1A24;--muted:#56646F;--line:#D6DCE1;
+  --button-bg:#0E1A24;--button-fg:#F3F5F7;
+  background:var(--lys-flade);color:var(--fg);
+}
+
+/* ---------- Grundlag ---------- */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+/* "Zoomet lidt ud" på computer: alt, der er målt i rem, bliver ca. 6 % mindre.
+   Procent i stedet for px, så brugerens egen skriftstørrelse i browseren stadig respekteres. */
+@media (min-width:60rem){html{font-size:93.75%}}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--fg);
+  font-family:var(--font);
+  font-size:1.0625rem;
+  line-height:1.6;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3{font-weight:800;line-height:1.1;margin:0;letter-spacing:-0.02em}
+p{margin:0}
+a{color:inherit;text-underline-offset:0.2em}
+img{display:block;max-width:100%;height:auto}
+
+/* Tydelig fokusmarkering til tastaturbrugere */
+:focus-visible{outline:3px solid var(--fg);outline-offset:3px}
+
+/* Tekst kun til skærmlæsere */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Fælles bredde og 16px margin i siderne på mobil */
+.wrap{max-width:80rem;margin-inline:auto;padding-inline:1rem}
+@media (min-width:48rem){.wrap{padding-inline:2.5rem}}
+
+/* "Spring til indhold" er skjult, indtil man tabber til den */
+.skip{position:absolute;left:1rem;top:-4rem;background:var(--button-bg);color:var(--button-fg);padding:0.5rem 1rem;font-weight:600;z-index:10}
+.skip:focus{top:1rem}
+
+/* Pil, der skubbes lidt frem, når man holder musen over linket */
+.pil{display:inline-block;transition:transform .25s var(--ease)}
+a:hover .pil,a:hover > span[aria-hidden]{transform:translateX(0.3em)}
+
+/* ---------- Top ---------- */
+/* På store skærme bliver menuen hængende øverst. Baggrunden er halvgennemsigtig og slører
+   indholdet bagved (som Apples menulinjer). Indholdet scroller ind under den. */
+@media (min-width:48rem){
+  .top-bar{
+    position:sticky;top:0;z-index:20;
+    background:rgba(10,17,25,0.96);
+    -webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+    border-bottom:1px solid rgba(238,242,245,0.08);
+    /* Menuen er præcis 5rem høj og lægger sig ind over toppen, så den mørke flade fortsætter bag den */
+    margin-bottom:-5rem;
+  }
+  .top{height:5rem;padding-block:0;flex-wrap:nowrap}
+  .hero-flade{padding-top:5rem}
+  /* Ankerlinks må ikke lande under menuen */
+  section[id]{scroll-margin-top:5rem}
+}
+/* Brugere, der har bedt om mindre gennemsigtighed, får en fast baggrund */
+@media (prefers-reduced-transparency:reduce){
+  .top-bar{background:#0A1119;-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+.top{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+  gap:0.5rem 2rem;padding-block:1.25rem;
+}
+.logo img{width:165px}
+.top ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:0 1.5rem}
+.top nav a{
+  font-weight:600;font-size:0.9375rem;text-decoration:none;
+  display:inline-block;padding-block:0.5rem; /* større klikflade */
+}
+.top nav a span{display:inline-block;transition:transform .25s var(--ease)}
+.top nav a:hover,.top nav a[aria-current="page"]{text-decoration:underline;text-underline-offset:0.35em;text-decoration-thickness:2px}
+
+/* "Kontakt mig" i menuen er en lys knap, så den skiller sig ud fra de andre punkter */
+.top nav .nav-kontakt{
+  background:#F3F5F7;color:#0A1119;
+  padding:0.55rem 1.1rem;margin-left:0.5rem;
+  transition:background-color .2s ease,scale .1s ease-out;
+}
+.top nav .nav-kontakt:hover{background:#FFFFFF;text-decoration:none}
+.top nav .nav-kontakt:hover span{transform:translateX(0.2em)}
+.top nav .nav-kontakt:active{scale:0.97}
+.top nav .nav-kontakt[aria-current="page"]{text-decoration:none;box-shadow:inset 0 -3px 0 #0A1119}
+/* Små skærme: tættere menu, så punkterne og knappen kan stå på én række under logoet */
+@media (max-width:47.99rem){
+  .top ul{gap:0 1rem;align-items:center}
+  .top nav .nav-kontakt{margin-left:0;padding:0.45rem 0.8rem}
+}
+
+/* ---------- Knapper ---------- */
+.knap{
+  display:inline-block;padding:1rem 1.5rem;
+  font-weight:600;text-decoration:none;
+  background:var(--button-bg);color:var(--button-fg);
+  border:2px solid var(--button-bg);
+}
+.knap span{display:inline-block;margin-left:0.35rem;transition:transform .25s var(--ease)}
+/* Svar med det samme, når man trykker (ikke først når man slipper).
+   "scale" er en selvstændig egenskab, så den virker sammen med magneteffekten fra GSAP. */
+.knap,.case-cta{transition:scale .1s ease-out}
+.knap:active,.case-cta:active{scale:0.97}
+
+/* ---------- Animationer, der bruges flere steder ---------- */
+/* Fade og glid op. "both": usynlig før start, bliver stående efter. */
+@keyframes ind{from{opacity:0;transform:translateY(1.5rem)}}
+.ind{animation:ind .8s var(--ease) both}
+/* Tekst skubbes op bag en usynlig kant (forælderen har overflow:hidden) */
+@keyframes op{from{transform:translateY(105%)}}
+
+/* =========================================================
+   A: ATTENTION – hero
+   ========================================================= */
+/* Mørk top (forside og Om mig) med et blødt lys bag portrættet, så fladen får dybde */
+.hero-flade{
+  background:
+    radial-gradient(50% 70% at 80% 45%, rgba(147,161,173,0.14) 0%, rgba(10,17,25,0) 70%),
+    #0A1119;
+  border-bottom:1px solid #26323E;
+}
+
+/* Lyst sidehoved på undersiderne, så ikke alle sider starter ens.
+   Menuen er stadig mørk og står her over sidehovedet i stedet for oven i det. */
+.side-flade{border-bottom:1px solid var(--line)}
+.side-flade + .sektion,.side-flade + .kontakt{border-top:0}   /* undgå dobbelt streg */
+.side-flade .tag{background:var(--fg);color:var(--bg)}
+@media (min-width:48rem){body:has(.side-flade) .top-bar{margin-bottom:0}}
+
+.hero{display:grid;gap:3.5rem;padding-block:3.5rem 5rem;align-items:center}
+@media (min-width:60rem){
+  /* Toppen fylder hele skærmen (minus menuen), så den får luft omkring sig */
+  .hero{grid-template-columns:1fr minmax(18rem,24rem);gap:5rem;padding-block:5rem;min-height:calc(100svh - 5rem)}
+}
+
+.hero-titel{
+  font-size:clamp(2.25rem,4.6vw,4.25rem);
+  line-height:1.1;letter-spacing:-0.03em;
+}
+.linje{display:block;overflow:hidden}
+.linje .ind{display:block;animation-name:op;animation-duration:.9s}
+.linje + .linje .ind{animation-delay:.12s}
+
+/* De skiftende ord: en lodret liste, hvor kun ét ord ad gangen er synligt */
+.skift{
+  display:inline-block;vertical-align:top;
+  height:1.1em;overflow:hidden;color:var(--muted);
+}
+.skift-liste{display:block;animation:skift 12.5s var(--ease) 1.6s infinite}
+.skift-liste span{display:block;height:1.1em;white-space:nowrap}
+/* 5 ord + gentagelse = 6 linjer. Hvert ord står stille, og så glider listen én linje op. */
+@keyframes skift{
+  0%,16%   {transform:translateY(0)}
+  20%,36%  {transform:translateY(-16.667%)}
+  40%,56%  {transform:translateY(-33.333%)}
+  60%,76%  {transform:translateY(-50%)}
+  80%,96%  {transform:translateY(-66.667%)}
+  100%     {transform:translateY(-83.333%)}
+}
+
+.hero-lead{margin-top:2.25rem;font-size:1.25rem;line-height:1.55;color:var(--muted);max-width:32rem;animation-delay:.35s}
+.hero-knapper{margin-top:2.75rem;display:flex;flex-wrap:wrap;gap:0.75rem;animation-delay:.5s}
+
+/* Portræt: sort-hvid via CSS, så det passer til de farveløse brandfarver.
+   Billedet vises med det samme (ingen skjule-animation), fordi det er det største element i toppen,
+   og Lighthouse/Google måler, hvor hurtigt det er synligt. Kun navnekortet glider ind. */
+.hero-foto{position:relative;margin:0;max-width:26rem;width:100%;justify-self:center}
+.hero-foto > img{   /* kun selve portrættet, ikke billedet i projektkortet */
+  width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 35%;
+  filter:grayscale(1) contrast(1.1) brightness(.95);
+}
+
+/* Lyst navnekort, der stikker ud over billedets kant */
+.navnekort{
+  position:absolute;left:0.75rem;bottom:1.25rem;
+  padding:0.9rem 1.25rem;line-height:1.35;
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.6);
+  animation:ind .7s var(--ease) 1s both;
+}
+.navnekort strong{display:block;font-weight:800}
+.navnekort span{font-size:0.875rem;color:var(--muted)}
+@media (min-width:60rem){.navnekort{left:-2.5rem;bottom:2.5rem}}
+
+/* Knap med kant i stedet for fyld */
+.knap-kant{background:transparent;color:var(--fg);border-color:var(--line)}
+.knap-kant:hover{border-color:var(--fg)}
+
+/* Bruges også på 404-siden */
+.lead{margin-top:1.5rem;font-size:1.1875rem;color:var(--muted);max-width:34rem}
+.knapper{margin-top:2rem}
+
+/* ---------- Sektioner: stor overskrift øverst, indhold i fuld bredde under ---------- */
+.sektion{padding-block:4rem;border-top:1px solid var(--line)}
+@media (min-width:60rem){.sektion{padding-block:5rem}}
+
+/* Overskrift til venstre, kort intro til højre (stablet på mobil) */
+.sektion-hoved{display:grid;gap:1.25rem;margin-bottom:3rem}
+@media (min-width:60rem){
+  .sektion-hoved{grid-template-columns:1fr minmax(0,24rem);align-items:end;gap:4rem;margin-bottom:4rem}
+}
+.sektion-titel{
+  font-size:clamp(2.25rem,5vw,4.25rem);
+  line-height:0.95;letter-spacing:-0.045em;
+}
+/* Lille nummer oppe ved siden af titlen, fx "Cases 01" */
+.sektion-titel .nr{
+  display:inline-block;vertical-align:top;margin:0.35em 0 0 0.35em;
+  font-size:1rem;font-weight:600;letter-spacing:0;color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.sektion-intro{color:var(--muted);font-size:1.125rem;max-width:24rem}
+
+.stor-tekst{
+  font-weight:400;font-size:clamp(1.25rem,2vw,1.6rem);
+  line-height:1.35;letter-spacing:-0.01em;max-width:34ch;
+}
+
+/* =========================================================
+   I: INTEREST – ydelser
+   ========================================================= */
+.ydelser{list-style:none;margin:0;padding:0}
+.ydelser li:last-child{border-bottom:1px solid var(--line)}
+/* Hver række vendes til mørk, når musen er over den. Pilen drejer og peger fremad.
+   Den mørke flade er et separat lag (::before), der stikker lidt ud til siderne,
+   så tekst og streger stadig flugter med resten af siden. */
+.ydelser li{
+  position:relative;isolation:isolate;
+  display:grid;gap:0.5rem;padding-block:1.5rem;
+  border-top:1px solid var(--line);
+  transition:color .35s var(--ease);
+}
+.ydelser li::before{
+  content:"";position:absolute;inset:0 -1rem;z-index:-1;
+  background:var(--fg);opacity:0;transition:opacity .35s var(--ease);
+}
+.ydelser h3{
+  font-size:clamp(1.375rem,2.4vw,1.875rem);letter-spacing:-0.02em;
+  transition:transform .35s var(--ease);
+}
+.ydelser p{color:var(--muted);max-width:30rem;transition:color .35s var(--ease)}
+.ydelser li::after{
+  content:"→";font-size:2rem;line-height:1;justify-self:end;
+  transform:rotate(-45deg);transition:transform .35s var(--ease);
+}
+/* Kun på enheder med mus, så rækken ikke "hænger" mørk efter et tryk på mobil */
+@media (hover:hover){
+  .ydelser li:hover{color:var(--bg)}
+  .ydelser li:hover::before{opacity:1}
+  .ydelser li:hover p{color:var(--bg)}
+  .ydelser li:hover h3{transform:translateX(0.75rem)}
+  .ydelser li:hover::after{transform:rotate(0)}
+}
+@media (min-width:48rem){
+  .ydelser li{grid-template-columns:1.2fr 1fr auto;align-items:center;gap:2rem}
+  .ydelser li::before{inset:0 -1.25rem}
+}
+@media (max-width:47.99rem){.ydelser li::after{display:none}}
+
+/* =========================================================
+   D: DESIRE – cases
+   ========================================================= */
+.cases{display:grid;gap:1rem}
+@media (min-width:60rem){
+  .cases{grid-template-columns:repeat(3,1fr);gap:1.25rem}
+  .case-stor{grid-column:span 2}
+}
+
+/* Kortene er altid mørke med lys tekst, så et billede bag kan stå frem.
+   Teksten ligger nederst over en mørk overgang, så kontrasten holder på ethvert billede. */
+.case{
+  position:relative;overflow:hidden;
+  min-height:30rem;
+  background:var(--band);color:#F3F5F7;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  border:1px solid var(--line);text-decoration:none;
+}
+@media (min-width:60rem){.case{min-height:38rem}}
+
+.case-billede{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .8s var(--ease);
+}
+.case:hover .case-billede{transform:scale(1.04)}
+.case-stor::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,17,25,0.95) 0%,rgba(10,17,25,0.6) 45%,rgba(10,17,25,0) 75%);
+}
+/* Den store case: enhedsopstilling øverst, kompakt tekst nederst på mørk flade */
+.case-stor{justify-content:flex-start}
+.case-stor::after{content:none}
+.case-stor{min-height:0}
+.case-cta{min-height:18rem}                       /* mobil: lavere end før */
+@media (min-width:60rem){.case{min-height:0}}   /* computer: kortenes højde styres af den store case */
+
+/* Scenen med browser og telefon. Browseren "stiger op" fra bunden og er skåret af nederst. */
+.case-media{
+  position:relative;overflow:hidden;
+  padding:1.5rem 1.5rem 0;
+  background:radial-gradient(120% 90% at 30% 0%,#1A2834 0%,#0E1A24 60%);
+  border-bottom:1px solid rgba(243,245,247,0.1);
+}
+@media (min-width:48rem){.case-media{padding:2.25rem 2.5rem 0}}
+
+/* Browservindue: tynd topbjælke med tre prikker og skærmbilledet under */
+.browser-ramme{
+  width:84%;background:#F3F5F7;border-radius:8px 8px 0 0;overflow:hidden;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,.6);
+}
+.browser-bar{display:flex;gap:5px;padding:7px 10px;background:#E2E7EB}
+.browser-bar i{width:7px;height:7px;border-radius:50%;background:#B9C2CA}
+.browser-ramme img{width:100%;height:auto}
+
+/* Telefon foran browseren nederst til højre. Hele telefonen er synlig. */
+.case-mobil{
+  position:absolute;z-index:2;right:1rem;bottom:0.75rem;
+  width:4.5rem;height:auto;
+  border:3px solid #0A1119;border-radius:0.8rem;
+  box-shadow:-10px 20px 40px -10px rgba(0,0,0,.7);
+}
+@media (min-width:48rem){.case-mobil{width:8rem;right:2.5rem;bottom:1.5rem;border-width:5px;border-radius:1.3rem}}
+
+/* Kompakt tekst under scenen */
+.case-stor .case-indhold{padding-block:1.5rem}
+@media (min-width:48rem){.case-stor .case-indhold{padding:1.75rem 2.5rem}}
+.case-stor :is(h2,h3){font-size:clamp(1.5rem,3vw,2.25rem)}
+.case-stor :is(h2,h3) span{margin-top:0.25rem;font-size:1rem}
+.case-stor .case-fakta{margin-top:1.25rem;padding-top:1rem}
+
+/* Pladsholder, indtil der er et rigtigt skærmbillede */
+.case-billede-tom{
+  display:grid;place-items:start center;padding-top:5rem;
+  background:repeating-linear-gradient(135deg,#16232F 0 14px,#121E29 14px 28px);
+  color:#93A1AD;font-weight:600;
+}
+
+.case-indhold{position:relative;z-index:1;padding:1.75rem}
+@media (min-width:48rem){.case-indhold{padding:2.5rem}}
+
+.tag{
+  display:inline-block;margin-bottom:1rem;
+  background:#F3F5F7;color:#0E1A24;
+  font-weight:600;font-size:0.8125rem;letter-spacing:0.02em;
+  padding:0.3rem 0.75rem;
+}
+.case :is(h2,h3){font-size:clamp(1.5rem,3vw,2.25rem)}
+.case :is(h2,h3) span{display:block;font-size:1rem;font-weight:400;color:#93A1AD;margin-top:0.35rem;letter-spacing:0}
+
+.case-fakta{
+  margin:1.75rem 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:1rem;
+  border-top:1px solid rgba(243,245,247,0.25);padding-top:1.25rem;
+}
+.case-fakta dt{color:#C9D1D8;font-size:0.875rem}
+.case-fakta dd{margin:0.15rem 0 0;font-weight:600;font-size:1.125rem}
+
+/* Hele kortet er et link til mail */
+.case-cta{background:var(--lys-flade);color:var(--fg)}
+/* Lys, der følger musen. js/main.js sætter --mx og --my, når musen bevæger sig. */
+.case-cta::before{
+  content:"";position:absolute;inset:0;opacity:0;transition:opacity .4s ease;
+  background:radial-gradient(circle 260px at var(--mx,50%) var(--my,50%),rgba(14,26,36,0.1),transparent 70%);
+}
+.case-cta:hover::before{opacity:1}
+.case-cta :is(h2,h3){font-size:clamp(1.75rem,2.8vw,2.25rem);max-width:10ch}
+.case-cta p{margin-top:1rem;color:var(--muted);max-width:22rem}
+.case-cta .pil{margin-top:2rem;font-size:3rem;line-height:1}
+
+/* =========================================================
+   D: DESIRE – om mig
+   ========================================================= */
+/* Tekst til venstre, fordele til højre */
+.om{display:grid;gap:2.5rem}
+@media (min-width:60rem){
+  .om{grid-template-columns:1.4fr 1fr;gap:4rem;align-items:start}
+  .om .fordele{margin-top:0}
+}
+
+.om-historie{margin-top:1.5rem;color:var(--muted);max-width:36rem;font-size:1.125rem}
+.fordele{list-style:none;margin:2.5rem 0 0;padding:0;border-bottom:1px solid var(--line)}
+.fordele li{padding-block:1rem;border-top:1px solid var(--line);color:var(--muted)}
+.fordele strong{color:var(--fg)}
+
+/* =========================================================
+   D: DESIRE – forløb
+   ========================================================= */
+/* Fem korte trin: under hinanden på mobil, på én række på computer */
+.forloeb-holder{position:relative}
+.forloeb{list-style:none;margin:0;padding:0;counter-reset:trin;display:grid;gap:2rem}
+.forloeb li{counter-increment:trin;display:grid;grid-template-columns:2.5rem 1fr;gap:0.25rem 1.25rem;align-content:start}
+/* Nummeret i en lille firkant. Baggrunden dækker linjen bag den. */
+.forloeb li::before{
+  content:counter(trin,decimal-leading-zero);
+  grid-row:span 2;position:relative;z-index:1;
+  width:2.5rem;height:2.5rem;display:grid;place-items:center;
+  border:2px solid var(--fg);background:var(--bg);
+  font-weight:800;font-size:0.875rem;font-variant-numeric:tabular-nums;
+  transition:background-color .4s var(--ease),color .4s var(--ease);
+}
+/* Når linjen når et trin, fyldes firkanten ud (klassen sættes af js/main.js) */
+.forloeb li.naaet::before{background:var(--fg);color:var(--bg)}
+.forloeb h3{font-size:1.25rem;margin-top:0.35rem}
+.forloeb p{color:var(--muted)}
+@media (min-width:60rem){
+  .forloeb{grid-template-columns:repeat(5,1fr);gap:2rem}
+  .forloeb li{grid-template-columns:1fr;gap:0}
+  .forloeb li::before{grid-row:auto;margin-bottom:1rem}
+  .forloeb h3{margin-top:0;margin-bottom:0.35rem}
+}
+
+/* Linjen gennem numrene: lodret på mobil, vandret på computer.
+   Position og retning sættes af js/main.js, derfor skjult uden JavaScript.
+   --fyld (0 til 1) styrer, hvor meget af linjen der er fyldt. */
+.forloeb-linje{display:none;position:absolute;width:2px;background:var(--line)}
+.forloeb-linje.vis{display:block}
+.forloeb-linje.vandret{width:auto;height:2px}
+.forloeb-linje span{display:block;width:100%;height:100%;background:var(--fg);transform-origin:top;transform:scaleY(var(--fyld,1))}
+.forloeb-linje.vandret span{transform-origin:left;transform:scaleX(var(--fyld,1))}
+
+/* =========================================================
+   A: ACTION – kontakt
+   ========================================================= */
+.kontakt{padding-block:4rem 5rem;border-top:1px solid var(--line)}
+@media (min-width:60rem){.kontakt{padding-block:5rem 6rem}}
+
+/* Overskrift til venstre, formular til højre (under hinanden på mobil) */
+.kontakt-gitter{display:grid;gap:3rem}
+@media (min-width:60rem){.kontakt-gitter{grid-template-columns:1fr 1.1fr;gap:6rem;align-items:start}}
+
+.kontakt-stor{
+  font-weight:800;font-size:clamp(2rem,4vw,3.25rem);line-height:1.05;letter-spacing:-0.03em;
+}
+.kontakt-tekst{margin-top:1.5rem;color:var(--muted);font-size:1.125rem;max-width:26rem}
+.kontakt-mail{
+  display:inline-block;margin-top:0.35rem;
+  font-weight:600;font-size:1.125rem;
+  text-decoration:underline;text-underline-offset:0.25em;overflow-wrap:anywhere;
+}
+
+/* ---------- Formular ---------- */
+.formular{display:grid;gap:1.5rem}
+.felt{display:grid;gap:0.4rem;margin:0;padding:0;border:0;min-width:0}
+.felt label,.felt legend{font-weight:600;font-size:0.9375rem;padding:0}
+.felt label span{font-weight:400;color:var(--muted)}
+
+/* Felter med kun en streg under, som på et papirskema */
+.felt input,.felt textarea{
+  width:100%;font:inherit;color:var(--fg);background:transparent;
+  border:0;border-bottom:2px solid var(--line);border-radius:0;
+  padding:0.6rem 0;transition:border-color .2s ease;
+}
+.felt textarea{resize:vertical;min-height:6rem}
+.felt input:focus,.felt textarea:focus{outline:none;border-bottom-color:var(--fg)}
+.felt input:focus-visible,.felt textarea:focus-visible{outline:none;box-shadow:0 2px 0 0 var(--fg)}
+
+/* Valg som knapper: selve radioknappen er skjult, men stadig til at nå med tastaturet */
+.valg{display:flex;flex-wrap:wrap;gap:0.5rem}
+.valg legend{margin-bottom:0.5rem;width:100%}
+.valg label{position:relative;font-weight:400}
+.valg input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.valg span{
+  display:inline-block;padding:0.55rem 0.9rem;border:1.5px solid var(--line);
+  font-size:0.9375rem;transition:border-color .2s ease,background-color .2s ease,color .2s ease;
+}
+.valg label:hover span{border-color:var(--fg)}
+.valg input:checked + span{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+.valg input:focus-visible + span{outline:3px solid var(--fg);outline-offset:2px}
+
+.formular .knap{justify-self:start;cursor:pointer;font:inherit;font-weight:600}
+.formular-note{font-size:0.875rem;color:var(--muted);max-width:30rem}
+
+/* ---------- Bund ---------- */
+
+/* ---------- 404-side ---------- */
+.fejl{min-height:60vh}
+.fejl h1{font-size:clamp(2.5rem,7vw,5rem)}
+.fejl-kode{font-weight:800;color:var(--muted);font-size:1.25rem;margin-bottom:0.75rem}
+
+/* ---------- Blød scroll (Lenis) ----------
+   Regler fra lenis.css. Lenis styrer selv scrollen, så browserens egen "smooth" slås fra. */
+html.lenis,html.lenis body{height:auto}
+html.lenis{scroll-behavior:auto}
+.lenis:not(.lenis-autoToggle).lenis-stopped{overflow:clip}
+.lenis.lenis-smooth iframe{pointer-events:none}
+
+/* ---------- Respekter "reducer bevægelse" ----------
+   Alle animationer slås fra, og alt vises med det samme. De skiftende ord står på "din virksomhed." */
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+}
+
+/* =========================================================
+   Flere sider: fælles dele
+   ========================================================= */
+
+/* Mørkt sidehoved øverst på undersiderne */
+.side-hoved{padding-block:4rem 4.5rem}
+@media (min-width:60rem){.side-hoved{padding-block:5rem 4.5rem}}
+.side-titel{font-size:clamp(2.75rem,6vw,5rem);line-height:1;letter-spacing:-0.04em}
+.side-intro{margin-top:1.75rem;font-size:1.25rem;line-height:1.55;color:var(--muted);max-width:38rem;animation-delay:.2s}
+.side-tag{margin-top:1.75rem;margin-bottom:0;animation-delay:.3s}
+
+/* Et link i titlen, der gør hele kortet/rækken klikbar */
+.strakt-link{color:inherit;text-decoration:none}
+.strakt-link::after{content:"";position:absolute;inset:0;z-index:3}
+.strakt-link:focus-visible{outline:none}
+.case:has(.strakt-link:focus-visible),.ydelser li:has(.strakt-link:focus-visible){outline:3px solid var(--fg);outline-offset:4px}
+
+/* Almindeligt tekstlink med pil */
+.tekst-link{font-weight:600;color:var(--fg);text-underline-offset:0.25em;white-space:nowrap}
+.tekst-link span{display:inline-block;transition:transform .25s var(--ease)}
+.tekst-link:hover span{transform:translateX(0.25em)}
+
+/* Kontaktbånd nederst på siderne */
+.cta-baand{padding-block:4.5rem;border-top:1px solid var(--line)}
+@media (min-width:60rem){.cta-baand{padding-block:5rem}}
+.cta-gitter{display:grid;gap:2rem}
+@media (min-width:60rem){.cta-gitter{grid-template-columns:1fr 1fr;gap:6rem;align-items:end}}
+.cta-knapper{margin-top:1.75rem;display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.75rem}
+.cta-knapper .kontakt-mail{margin-top:0}
+
+/* ---------- Ydelser-siden ---------- */
+.ydelse-liste{}
+.ydelse-detalje{display:grid;gap:1rem;padding-block:2.5rem;border-top:1px solid var(--line)}
+.ydelse-detalje h2{font-size:clamp(1.75rem,3.2vw,2.5rem);letter-spacing:-0.035em;line-height:1}
+.ydelse-detalje .ydelse-nr{font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.ydelse-tekst{font-size:1.125rem;max-width:34rem}
+.punkt-liste{list-style:none;margin:1.25rem 0 0;padding:0;display:grid;gap:0.5rem}
+.punkt-liste li{position:relative;padding-left:1.25rem;color:var(--muted)}
+.punkt-liste li::before{content:"";position:absolute;left:0;top:0.65em;width:0.45rem;height:0.45rem;background:var(--fg)}
+@media (min-width:60rem){
+  .ydelse-detalje{grid-template-columns:4rem 1fr 1.15fr;gap:2.5rem;padding-block:3.5rem;align-items:start}
+}
+section[id],article[id]{scroll-margin-top:6rem}
+
+/* ---------- Case-siden ---------- */
+.case-side{display:grid;gap:3rem}
+@media (min-width:60rem){
+  .case-side{grid-template-columns:1.25fr 1fr;gap:5rem;align-items:start}
+  .case-tekst{position:sticky;top:7rem}
+}
+.case-hel{width:100%;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.case-tekst h2{font-size:1.5rem;margin:2.25rem 0 0.6rem}
+.case-tekst p{color:var(--muted);max-width:34rem}
+.fakta-liste{margin:0;display:grid;grid-template-columns:repeat(3,auto);justify-content:start;gap:1.5rem 2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--line)}
+.fakta-liste dt{font-size:0.8125rem;color:var(--muted)}
+.fakta-liste dd{margin:0.15rem 0 0;font-weight:600}
+.case-mobil-stor{width:9rem;margin-top:2.5rem;border:5px solid #0A1119;border-radius:1.3rem;box-shadow:0 20px 40px -14px rgba(0,0,0,.45)}
+.case-note{margin-top:1.75rem;font-size:0.875rem}
+
+/* ---------- Bund ----------
+   Mørk som toppen (klassen moerk-flade i HTML). Fire kolonner på computer, under hinanden på mobil. */
+.bund{padding-block:4rem 2rem;font-size:0.9375rem}
+@media (min-width:60rem){.bund{padding-block:5rem 2.25rem}}
+.bund-gitter{display:grid;gap:2.5rem;padding-bottom:3rem}
+@media (min-width:40rem){.bund-gitter{grid-template-columns:1fr 1fr}}
+@media (min-width:60rem){.bund-gitter{grid-template-columns:1.6fr 1fr 1.2fr 1fr;gap:3rem}}
+.bund-logo{width:180px}
+.bund-om p{margin-top:1.25rem;color:var(--muted);max-width:20rem}
+.bund-kolonne h2{
+  font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:1rem;
+}
+.bund-kolonne ul{list-style:none;margin:0;padding:0;display:grid;gap:0.6rem}
+.bund-kolonne li{color:var(--muted)}
+.bund a{color:var(--fg);text-decoration:none}
+.bund-kolonne a:hover,.til-toppen:hover{text-decoration:underline;text-underline-offset:0.25em}
+
+/* Bundlinje: copyright til venstre, "Til toppen" til højre */
+.bund-linje{
+  display:flex;flex-wrap:wrap;justify-content:space-between;gap:1rem;
+  padding-top:1.5rem;border-top:1px solid var(--line);color:var(--muted);
+}
+.til-toppen{font-weight:600}
+.til-toppen span{display:inline-block;transition:transform .25s var(--ease)}
+.til-toppen:hover span{transform:translateY(-0.2em)}
+
+/* Bunden står altid nederst, også på korte sider (fx 404): body er en kolonne, og main fylder resten */
+body{display:flex;flex-direction:column;min-height:100vh;min-height:100svh}
+main{flex:1}
+/* Består siden kun af én mørk flade (fx 404), fylder den hele højden, så der ikke kommer en lys stribe */
+main:has(> .moerk-flade:only-child){display:flex;flex-direction:column}
+main > .moerk-flade:only-child{flex:1}
+
+/* ---------- Tekstsider (fx Privatliv) ---------- */
+.tekst-side{max-width:42rem}
+.tekst-side h2{font-size:1.375rem;margin:2.5rem 0 0.5rem}
+.tekst-side h2:first-child{margin-top:0}
+.tekst-side p{color:var(--muted)}
+.tekst-side a,.formular-note a{color:var(--fg);font-weight:600;text-underline-offset:0.2em}
+
+/* ---------- 404 ---------- */
+.fejl-side .fejl-kode{margin-bottom:1rem}
+.fejl-side .hero-knapper{margin-top:2.25rem}
+
+/* ---------- Toppen: tillidspunkter ---------- */
+.hero-tillid{
+  list-style:none;margin:2rem 0 0;padding:0;
+  display:flex;flex-wrap:wrap;gap:0.5rem 1.5rem;
+  font-size:0.9375rem;color:var(--muted);animation-delay:.6s;
+}
+.hero-tillid li{display:flex;align-items:center;gap:0.55rem}
+.hero-tillid li::before{content:"";width:0.45rem;height:0.45rem;background:var(--fg)}
+
+
+/* =========================================================
+   Sidehoveder med et visuelt element (Ydelser og Cases)
+   ========================================================= */
+.side-hoved-delt{display:grid;gap:3rem;align-items:center}
+@media (min-width:60rem){.side-hoved-delt{grid-template-columns:1fr 1fr;gap:4rem}}
+
+/* ---------- Ydelser: genveje til de tre ydelser i toppen ---------- */
+.ydelse-genveje{display:grid;border-top:1px solid var(--line)}
+.ydelse-genveje a{
+  display:flex;align-items:baseline;gap:1.25rem;padding-block:1.1rem;
+  border-bottom:1px solid var(--line);text-decoration:none;
+  font-weight:800;font-size:clamp(1.5rem,3vw,2.25rem);letter-spacing:-0.02em;
+  transition:padding .3s var(--ease);
+}
+.ydelse-genveje span{font-size:0.875rem;font-weight:600;color:var(--muted);letter-spacing:0;font-variant-numeric:tabular-nums}
+.ydelse-genveje i{margin-left:auto;font-style:normal;font-weight:400;font-size:1.25rem;color:var(--muted);transition:transform .3s var(--ease)}
+.ydelse-genveje a:hover{padding-left:0.5rem}
+.ydelse-genveje a:hover i{transform:translateY(0.2em);color:var(--fg)}
+
+/* ---------- Cases: collage af den seneste case ---------- */
+.collage{position:relative;display:block;width:100%;max-width:30rem;justify-self:center;padding:1rem 3rem 2.5rem 0;animation:ind .8s var(--ease) .2s both}
+.collage-browser{display:block;transform:rotate(-2.5deg);border-radius:8px;overflow:hidden;box-shadow:0 30px 60px -25px rgba(14,26,36,.45);transition:transform .4s var(--ease)}
+/* Viser midten af hendes forside (teknikkerne), så collagen ikke gentager casekortet nedenunder */
+.collage-browser img{width:100%;aspect-ratio:16/10;object-fit:cover;object-position:50% 47%}
+.collage-mobil{
+  position:absolute;right:0;bottom:0;width:7rem;
+  border:5px solid #0A1119;border-radius:1.1rem;transform:rotate(4deg);
+  box-shadow:-10px 20px 40px -12px rgba(0,0,0,.5);transition:transform .4s var(--ease);
+}
+.collage:hover .collage-browser{transform:rotate(-1deg) translateY(-4px)}
+.collage:hover .collage-mobil{transform:rotate(2deg) translateY(-6px)}
+@media (min-width:60rem){.collage-mobil{width:8.5rem}}
+
+/* ---------- "Under udvikling" ----------
+   Mærke oven på billederne af en case, der ikke er færdig, og en besked på case-siden.
+   Prikken pulserer roligt for at vise, at arbejdet er i gang. */
+@keyframes puls{0%,100%{opacity:1}50%{opacity:.25}}
+.status-maerke{
+  position:absolute;z-index:4;top:0.9rem;left:0.9rem;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  padding:0.4rem 0.75rem;background:#F3F5F7;color:#0E1A24;
+  font-size:0.75rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;
+  box-shadow:0 8px 20px -10px rgba(0,0,0,.5);
+}
+.status-maerke i,.status-boks i{width:0.5rem;height:0.5rem;border-radius:50%;background:#0E1A24;animation:puls 1.6s ease-in-out infinite;flex:none}
+.case-hel{position:relative}
+.case-hel .status-maerke{top:2.6rem}
+.collage .status-maerke{top:0;left:-0.5rem;transform:rotate(-2.5deg)}
+
+.status-boks{
+  display:flex;gap:0.75rem;align-items:baseline;
+  margin-top:1.25rem;max-width:38rem;padding:0.9rem 1.1rem;
+  border:1px solid var(--line);border-left:4px solid var(--fg);background:var(--bg);
+  font-size:0.9375rem;color:var(--muted);animation-delay:.35s;
+}
+.status-boks i{background:var(--fg);transform:translateY(-0.05em)}
+.status-boks strong{color:var(--fg)}
+
+/* =========================================================
+   Logomærket som grafisk element
+   Den færdige fil fra brand kit (img/mark-*.svg) vises stort og svagt
+   i baggrunden og beskæres af kanten. Logoet tegnes ikke om.
+   ========================================================= */
+.hero-flade,.side-flade,.bund{position:relative;overflow:hidden;isolation:isolate}
+.hero-flade::before,.side-flade::before,.bund::before{
+  content:"";position:absolute;z-index:-1;pointer-events:none;
+  aspect-ratio:74/80;background:no-repeat center/contain;
+}
+/* Mørk top: stort hvidt mærke ud over venstre kant, bag teksten */
+.hero-flade::before{
+  background-image:url("img/mark-white.svg");opacity:0.045;
+  height:135%;left:-14%;top:-12%;
+}
+/* Lyse sidehoveder: mørkt mærke ud over højre kant */
+.side-flade::before{
+  background-image:url("img/mark-ink.svg");opacity:0.05;
+  height:115%;right:-4%;top:-8%;
+}
+/* Bunden: mærket nederst til højre, beskåret */
+.bund::before{
+  background-image:url("img/mark-white.svg");opacity:0.04;
+  height:170%;right:-6%;bottom:-55%;
+}
+@media (max-width:47.99rem){
+  .hero-flade::before{height:70%;left:-30%;top:-4%}
+  .side-flade::before{height:120%;right:-35%;top:-10%}
+}
+
+/* ---------- Ydelser: linjer, der tegnes ----------
+   Linjerne er ::after/::before, så de kan "tegnes" fra venstre med scaleX.
+   html får klassen .anim-klar fra js/main.js. Uden JavaScript (eller med
+   "reducer bevægelse") står linjerne bare færdige. */
+.ydelse-genveje{border-top:0}
+.ydelse-genveje a{position:relative;border-bottom:0}
+.ydelse-genveje a::after,.ydelse-detalje::before{
+  content:"";position:absolute;left:0;right:0;height:1px;
+  transform-origin:left;transition:transform 1.1s var(--ease);
+}
+.ydelse-genveje a::after{bottom:0;background:var(--line)}
+.ydelse-genveje a:first-child::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:var(--line)}
+.ydelse-genveje a:nth-child(2)::after{transition-delay:.12s}
+.ydelse-genveje a:nth-child(3)::after{transition-delay:.24s}
+
+.ydelse-detalje{position:relative;border-top:0}
+.ydelse-detalje::before{top:0;background:var(--fg)}
+/* Titlen skjules bag en kant og glider op */
+.ydelse-detalje > div:first-of-type{overflow:hidden}
+
+.anim-klar .ydelse-genveje:not(.tegnet) a::after,
+.anim-klar .ydelse-detalje:not(.tegnet)::before{transform:scaleX(0)}
+
+/* "Under udvikling" er gul som et advarselsskilt. Det er den eneste gule farve på siden
+   og bruges kun til at vise status, ikke som accentfarve. */
+:root{--status-gul:#F5C518}
+.status-maerke{background:var(--status-gul);color:#0E1A24}
+.status-maerke i{background:#0E1A24}
+.status-boks{border-left-color:var(--status-gul)}
+.status-boks i{background:var(--status-gul);box-shadow:0 0 0 1px #0E1A24}
