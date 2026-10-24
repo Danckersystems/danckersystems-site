@@ -2,7 +2,7 @@
 // Dancker Systems – modtager kontaktformularen og sender den som mail til kontakt@.
 // Intet gemmes: beskeden sendes kun videre som mail og glemmes derefter.
 //
-// Mailen sendes ved at logge ind på Simplys mailserver (SMTP) som kontakt@, ligesom et
+// Mailen sendes ved at logge ind på Simplys script-mailserver (websmtp.simply.com) som kontakt@, ligesom et
 // mailprogram gør. Det er nødvendigt, fordi domænets DMARC-regel ellers afviser mailen.
 // Login står i mail-config.php, som aldrig ligger i git (se UDGIV.md).
 
@@ -112,7 +112,9 @@ fejl($resultat);
 // =====================================================================
 function smtpSend(array $cfg, string $til, string $svarTil, string $emne, string $tekst, int $port): string {
     $fra   = $cfg['bruger'];
-    $vaert = $cfg['vaert'] ?? 'smtp.simply.com';
+    // Simply kræver websmtp.simply.com til afsendelse fra webhotellet (smtp.simply.com er kun til mailprogrammer).
+    // Serveren i mail-config.php ignoreres derfor med vilje.
+    $vaert = 'websmtp.simply.com';
     $ssl   = $port === 465;
 
     $fp = @stream_socket_client(($ssl ? 'ssl://' : 'tcp://') . $vaert . ':' . $port, $nr, $fejltekst, 15);
